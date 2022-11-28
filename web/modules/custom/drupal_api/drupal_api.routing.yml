@@ -1,0 +1,23 @@
+drupal_api.menu:
+  path: '/admin/drupal-api/config'
+  defaults:
+    _form: 'Drupal\drupal_api\Form\DrupalApiConfigForm'
+    _title: 'Top Issues Configuration'
+  requirements:
+    _permission: 'access drupal api config form'
+
+drupal_api.settings:
+  path: '/admin/config/drupal_api'
+  defaults:
+    _form: 'Drupal\drupal_api\Form\DrupalApiConfigForm'
+    _title: 'Slider configuration'
+  requirements:
+    _permission: 'access drupal api config form'
+
+drupal_api.block_page:
+  path: /top-issues
+  defaults:
+    _controller: '\Drupal\drupal_api\Controller\DrupalApiController::build'
+    _title: ''
+  requirements:
+    _permission: 'access content'
