@@ -1,0 +1,25 @@
+uuid: 401259d2-6b6b-4030-b3ec-90513b81d55d
+langcode: es
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.article
+  module:
+    - text
+_core:
+  default_config_hash: IjZnOLWk1Pjq3WRg2pLSA1ERh7Po7izCq_p6UztZr2c
+id: node.article.body
+field_name: body
+entity_type: node
+bundle: article
+label: Cuerpo
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+  required_summary: false
+field_type: text_with_summary

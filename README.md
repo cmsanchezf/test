@@ -17,5 +17,3 @@ ddev composer install
 ddev snapshot restore
 ddev drush uli
 ```
-
-You can restore the images of the media.zip file in the root of the project in web/sites/default/files
