@@ -1,0 +1,16 @@
+drupal_api_config:
+  type: config_object
+  label: "Block Top Issues Configuration"
+  mapping:
+    project: null
+      type: text
+      label: "Machine name of the module."
+    project_nid: null
+      type: text
+      label: "nid of the module."
+    project_name: null
+      type: text
+      label: "Name of the module."
+    items:
+      type: text
+      label: "Email del centro de entrenamiento."
