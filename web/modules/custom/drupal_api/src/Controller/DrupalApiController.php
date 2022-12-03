@@ -17,7 +17,7 @@ class DrupalApiController extends ControllerBase {
    *
    * @param \Drupal\Component\Plugin\PluginManagerInterface $plugin_manager_block
    *   The plugin.manager.block service.
-   * @param Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param Drupal|Core\Render\RendererInterface $renderer
    *   The config.factory service.
    */
   public function __construct(private PluginManagerInterface $plugin_manager_block, private RendererInterface $renderer) {

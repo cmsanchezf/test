@@ -3,10 +3,9 @@
 namespace Drupal\drupal_api;
 
 use GuzzleHttp\ClientInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class DrupalAPIClient.
+ * Class DrupalAPIClient, provide a calls to drupal.org API.
  *
  * @package Drupal\drupal_api
  */
@@ -35,7 +34,7 @@ class DrupalAPIClient {
    * Get data from a module with a given name.
    */
   public function getTopIssues() {
-    $request =  $this->http_client->request('GET', self::API_URL . 'node.json?type=project_issue&field_issue_status=1&field_project=1234');
+    $request = $this->http_client->request('GET', self::API_URL . 'node.json?type=project_issue&field_issue_status=1&field_project=1234');
     return $request;
   }
 

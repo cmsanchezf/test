@@ -2,6 +2,7 @@
 
 /**
  * @file
+ * Module for drupal.org plugin integration.
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;

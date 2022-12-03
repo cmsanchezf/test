@@ -15,10 +15,10 @@ class DrupalApiConfigForm extends ConfigFormBase {
   /**
    * DrupalAPIClient constructor.
    *
-   * @param \Drupal\drupal_api\DrupalAPIClient $DrupalApiClient
-   *   DrupalAPIClient
+   * @param \Drupal\drupal_api\DrupalAPIClient $drupalApiClient
+   *   DrupalAPIClient.
    */
-  public function __construct(private DrupalAPIClient $DrupalApiClient) {
+  public function __construct(private DrupalAPIClient $drupalApiClient) {
   }
 
   /**
@@ -29,7 +29,7 @@ class DrupalApiConfigForm extends ConfigFormBase {
         $container->get('drupal_api.drupal_api_calls'),
       );
   }
-  
+
   /**
    * {@inheritdoc}
    */
@@ -94,7 +94,7 @@ class DrupalApiConfigForm extends ConfigFormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues()['drupal_api'];
-    $response = $this->DrupalApiClient->getModuleData($values['project']);
+    $response = $this->drupalApiClient->getModuleData($values['project']);
     $status = $response->getStatusCode();
     $list = json_decode($response->getBody()->getContents())->list;
 
