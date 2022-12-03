@@ -3,14 +3,33 @@
 namespace Drupal\drupal_api\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\drupal_api\DrupalAPIClient;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\HttpFoundation\Test\Constraint\ResponseStatusCodeSame;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Configure example settings for this site.
  */
 class DrupalApiConfigForm extends ConfigFormBase {
 
+  /**
+   * DrupalAPIClient constructor.
+   *
+   * @param \Drupal\drupal_api\DrupalAPIClient $DrupalApiClient
+   *   DrupalAPIClient
+   */
+  public function __construct(private DrupalAPIClient $DrupalApiClient) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+        $container->get('drupal_api.drupal_api_calls'),
+      );
+  }
+  
   /**
    * {@inheritdoc}
    */
@@ -43,6 +62,7 @@ class DrupalApiConfigForm extends ConfigFormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Project'),
       '#default_value' => $config->get('drupal_api.project'),
+      '#pattern' => '^[a-z_]+$',
     ];
 
     $form['drupal_api']['items'] = [
@@ -62,31 +82,32 @@ class DrupalApiConfigForm extends ConfigFormBase {
     // Retrieve the configuration.
     $this->configFactory->getEditable('drupal_api_config.settings')
     // Set the submitted configuration setting.
-    ->set('drupal_api.project', $values['project'])
-    ->set('drupal_api.items', $values['items'])
-    ->save();
+      ->set('drupal_api.project', $values['project'])
+      ->set('drupal_api.items', $values['items'])
+      ->save();
 
     parent::submitForm($form, $form_state);
   }
-
 
   /**
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues()['drupal_api'];
-    $client = \Drupal::httpClient();
-    $request = $client->request('GET', 'https://www.drupal.org/api-d7/node.json?field_project_machine_name='.$values['project']);
-    $response = $request->getBody()->getContents();
+    $response = $this->DrupalApiClient->getModuleData($values['project']);
+    $status = $response->getStatusCode();
+    $list = json_decode($response->getBody()->getContents())->list;
 
-    if (!json_decode($response)->list) {
+    if (empty($list) || $status != '200') {
       $form_state->setError($form, $this->t('You should provide the machine name of a current mantained project at drupal.org'));
-    } else {
+    }
+    else {
       $this->configFactory->getEditable('drupal_api_config.settings')
-    // Set the submitted configuration setting.
-    ->set('drupal_api.project_nid', json_decode($response)->list[0]->nid)
-    ->set('drupal_api.project_name', json_decode($response)->list[0]->title)
-    ->save();
+      // Set the submitted configuration setting.
+        ->set('drupal_api.project_nid', $list[0]->nid)
+        ->set('drupal_api.project_name', $list[0]->title)
+        ->save();
     }
   }
+
 }

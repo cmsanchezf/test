@@ -1,11 +1,14 @@
 <?php
 
-use Drupal\Core\Routing\RouteMatchInterface;
+/**
+ * @file
+ */
 
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * @file
- * Hooks and functionality for Drupal API module
+ * Hooks and functionality for Drupal API module.
  */
 
 /**

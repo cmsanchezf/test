@@ -3,4 +3,3 @@ description: Module to generate a block with top issues for a given project mant
 package: borjatest
 type: module
 core_version_requirement: ^8.8.0 || ^9
-
