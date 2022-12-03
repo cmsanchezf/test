@@ -3,7 +3,7 @@
 namespace Drupal\drupal_api\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
-use Drupal\drupal_api\DrupalAPIClient;
+use Drupal\drupal_api\Services\DrupalAPIClient;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -95,15 +95,12 @@ class DrupalApiConfigForm extends ConfigFormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues()['drupal_api'];
     $response = $this->drupalApiClient->getModuleData($values['project']);
-    $status = $response->getStatusCode();
-    $list = json_decode($response->getBody()->getContents())->list;
-
-    if (empty($list) || $status != '200') {
+    if (is_null($response)) {
       $form_state->setError($form, $this->t('You should provide the machine name of a current mantained project at drupal.org'));
-    }
-    else {
+    } else {
+      $list = json_decode($response->getBody()->getContents())->list;
       $this->configFactory->getEditable('drupal_api_config.settings')
-      // Set the submitted configuration setting.
+      // // Set the submitted configuration setting.
         ->set('drupal_api.project_nid', $list[0]->nid)
         ->set('drupal_api.project_name', $list[0]->title)
         ->save();

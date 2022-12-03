@@ -1,5 +1,13 @@
+# File: drupal_api/drupal_api_config.settings.yml
+
 drupal_api:
   project: null
   project_nid: null
   project_name: null
   items: null
+
+logger:
+  channels:
+    drupal_api_message:
+      # The minimum level of messages to log.
+      minimum_level: error
