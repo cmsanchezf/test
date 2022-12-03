@@ -95,16 +95,10 @@ class DrupalApiConfigForm extends ConfigFormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues()['drupal_api'];
     $response = $this->drupalApiClient->getModuleData($values['project']);
-    if (is_null($response)) {
+    if (!$response) {
       $form_state->setError($form, $this->t('You should provide the machine name of a current mantained project at drupal.org'));
-    } else {
-      $list = json_decode($response->getBody()->getContents())->list;
-      $this->configFactory->getEditable('drupal_api_config.settings')
-      // // Set the submitted configuration setting.
-        ->set('drupal_api.project_nid', $list[0]->nid)
-        ->set('drupal_api.project_name', $list[0]->title)
-        ->save();
     }
+
   }
 
 }
