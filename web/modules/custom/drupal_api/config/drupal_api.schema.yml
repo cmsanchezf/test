@@ -13,4 +13,4 @@ drupal_api_config:
       label: "Name of the module."
     items:
       type: text
-      label: "Email del centro de entrenamiento."
+      label: "Numbe of results for the block."

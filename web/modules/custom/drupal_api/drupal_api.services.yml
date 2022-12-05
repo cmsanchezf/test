@@ -6,4 +6,4 @@ services:
 
   drupal_api.drupal_api_calls:
     class: Drupal\drupal_api\Services\DrupalAPIClient
-    arguments: ['@http_client', '@logger.factory', '@config.factory']
+    arguments: ['@http_client', '@logger.factory', '@config.factory', '@cache.default']

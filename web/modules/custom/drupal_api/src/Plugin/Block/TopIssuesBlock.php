@@ -2,6 +2,7 @@
 
 namespace Drupal\drupal_api\Plugin\Block;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Session\AccountProxyInterface;
@@ -71,6 +72,7 @@ class TopIssuesBlock extends BlockBase implements ContainerFactoryPluginInterfac
     $response = $this->drupalApiClient->getTopIssues();
     $response = $response->getBody()->getContents();
 
+
     foreach (json_decode($response)->list as $key => $value) {
       $list[] = (array) $value;
     }
@@ -85,6 +87,14 @@ class TopIssuesBlock extends BlockBase implements ContainerFactoryPluginInterfac
       '#items' => $config->get('drupal_api.items'),
       '#data' => array_slice($list, 0, $config->get('drupal_api.items')),
     ];
+  }
+
+    /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    $tags =  ['borja_tag'];
+    return Cache::mergeTags($tags, parent::getCacheTags());
   }
 
 }

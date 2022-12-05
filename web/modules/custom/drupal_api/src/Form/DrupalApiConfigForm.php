@@ -2,9 +2,10 @@
 
 namespace Drupal\drupal_api\Form;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\ConfigFormBase;
-use Drupal\drupal_api\Services\DrupalAPIClient;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\drupal_api\Services\DrupalAPIClient;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -86,6 +87,7 @@ class DrupalApiConfigForm extends ConfigFormBase {
       ->set('drupal_api.items', $values['items'])
       ->save();
 
+    Cache::invalidateTags(['borja_tag']);
     parent::submitForm($form, $form_state);
   }
 

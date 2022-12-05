@@ -2,8 +2,9 @@
 
 namespace Drupal\drupal_api\Services;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
 use GuzzleHttp\ClientInterface;
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 
 /**
@@ -24,8 +25,10 @@ class DrupalAPIClient {
    *   The Config Factory service.
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $loggerFactory
    *   The logger factory.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+   *   The default cache service.
    */
-  public function __construct(private ClientInterface $httpClient, private LoggerChannelFactoryInterface $loggerFactory, private ConfigFactoryInterface $configFactory) {
+  public function __construct(private ClientInterface $httpClient, private LoggerChannelFactoryInterface $loggerFactory, private ConfigFactoryInterface $configFactory, private CacheBackendInterface $cache) {
   }
 
   /**
@@ -61,12 +64,24 @@ class DrupalAPIClient {
     $logger = $this->loggerFactory->get('drupal_api');
     $config = $this->configFactory->get('drupal_api_config.settings');
     $nid = $config->get('drupal_api.project_nid');
+
+    // Create a cache ID for the response.
+    $cacheId = 'drupal_api.top_issues.' . $nid;
+
+    // Check if the response is already cached.
+    $cache = $this->cache->get($cacheId);
+    if ($cache) {
+      return $cache->data;
+    }
+    
     try {
       $response = $this->httpClient->request('GET', self::API_URL . 'node.json?type=project_issue&field_issue_status=1&field_project=' . $nid);
       if ($response->getStatusCode() != '200') {
         throw new \Exception('There was an error obtaining data from drupal.org.');
       }
       $logger->info('Request was successful');
+      // Cache the response for 10 hours.
+      $this->cache->set($cacheId, $response, time() + 36000);
     }
     catch (\Exception $e) {
       $response = NULL;
