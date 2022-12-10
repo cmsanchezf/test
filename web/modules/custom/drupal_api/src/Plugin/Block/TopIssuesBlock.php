@@ -4,6 +4,7 @@ namespace Drupal\drupal_api\Plugin\Block;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\drupal_api\Services\DrupalAPIClient;
@@ -68,12 +69,14 @@ class TopIssuesBlock extends BlockBase implements ContainerFactoryPluginInterfac
    *   renderable array
    */
   public function build() {
-    $config = $this->configFactory->get('drupal_api_config.settings');
-    $response = $this->drupalApiClient->getTopIssues();
-    $response = $response->getBody()->getContents();
+    // Retrieve from block config.
+    $config = $this->getConfiguration();
+    $project = $config['project_nid'];
+    $name = $config['project_name'];
+    $items = $config['items'];
 
-
-    foreach (json_decode($response)->list as $key => $value) {
+    $request = $this->drupalApiClient->getTopIssues($project);
+    foreach (json_decode($request)->list as $value) {
       $list[] = (array) $value;
     }
 
@@ -83,17 +86,74 @@ class TopIssuesBlock extends BlockBase implements ContainerFactoryPluginInterfac
 
     return [
       '#theme' => 'top_issues_block',
-      '#project_name' => $config->get('drupal_api.project_name'),
-      '#items' => $config->get('drupal_api.items'),
-      '#data' => array_slice($list, 0, $config->get('drupal_api.items')),
+      '#project_name' => $name,
+      '#items' => $items,
+      '#data' => array_slice($list, 0, $items),
     ];
   }
 
-    /**
+  /**
+   * {@inheritdoc}
+   */
+  public function blockForm($form, FormStateInterface $form_state) {
+    $form = parent::blockForm($form, $form_state);
+    $config = $this->getConfiguration();
+
+    // Get the saved values for the project name and number of items.
+    // Use default values if the keys do not exist in the configuration array.
+    $project_name = $config['project_name'] ?: '';
+    $items = $config['items'] ?? 5;
+
+    $form['project_name'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Project name'),
+      '#default_value' => $project_name,
+      '#required' => TRUE,
+    ];
+
+    $form['items'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Number of items'),
+      '#default_value' => $items,
+      '#required' => TRUE,
+      '#min' => 1,
+      '#max' => 10,
+    ];
+
+    return $form;
+  }
+
+  /**
+   * Implements hook_block_submit().
+   */
+  public function blockSubmit($form, FormStateInterface $form_state) {
+    // Set the configuration values for the block based on the user's input.
+    $this->setConfigurationValue('project_machine_name', $form_state->getValue('project_machine_name'));
+    $this->setConfigurationValue('items', (string) $form_state->getValue('items'));
+  }
+
+  /**
+   * Implements hook_block_validate().
+   */
+  public function blockValidate($form, FormStateInterface $form_state) {
+    $values = $form_state->getValues();
+    $response = $this->drupalApiClient->getModuleData($values['project_name']);
+
+    if (!$response) {
+      $form_state->setError($form, $this->t('You should provide the machine name of a current mantained project at drupal.org'));
+    }
+    else {
+      $this->setConfigurationValue('project_nid', $response[0]->nid);
+      $this->setConfigurationValue('project_name', $response[0]->title);
+
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getCacheTags() {
-    $tags =  ['borja_tag'];
+    $tags = ['borja_tag'];
     return Cache::mergeTags($tags, parent::getCacheTags());
   }
 

@@ -13,11 +13,3 @@ drupal_api.settings:
     _title: 'Slider configuration'
   requirements:
     _permission: 'access drupal api config form'
-
-drupal_api.block_page:
-  path: /top-issues
-  defaults:
-    _controller: '\Drupal\drupal_api\Controller\DrupalApiController::build'
-    _title: ''
-  requirements:
-    _permission: 'access content'

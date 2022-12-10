@@ -1,0 +1,24 @@
+uuid: c312966a-0984-4dc1-8a21-1e68d7ef1947
+langcode: es
+status: true
+dependencies:
+  module:
+    - drupal_api
+  theme:
+    - olivero
+id: topissues_2
+theme: olivero
+region: content
+weight: 0
+provider: null
+plugin: drupal_api_top_issues_block
+settings:
+  id: drupal_api_top_issues_block
+  label: 'Top Issues'
+  label_display: visible
+  provider: drupal_api
+  project_nid: '2474539'
+  project_name: 'Admin Toolbar'
+  project_machine_name: null
+  items: '5'
+visibility: {  }

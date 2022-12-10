@@ -1,0 +1,24 @@
+uuid: 9a16adc9-d43a-4391-b9b0-f12b6246f0b3
+langcode: es
+status: true
+dependencies:
+  module:
+    - drupal_api
+  theme:
+    - olivero
+id: topissues
+theme: olivero
+region: content
+weight: 0
+provider: null
+plugin: drupal_api_top_issues_block
+settings:
+  id: drupal_api_top_issues_block
+  label: 'Top Issues'
+  label_display: visible
+  provider: drupal_api
+  project_nid: '17345'
+  project_name: Pathauto
+  project_machine_name: null
+  items: '5'
+visibility: {  }
