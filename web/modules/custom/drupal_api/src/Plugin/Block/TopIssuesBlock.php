@@ -5,10 +5,7 @@ namespace Drupal\drupal_api\Plugin\Block;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\drupal_api\Services\DrupalAPIClient;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -34,16 +31,10 @@ class TopIssuesBlock extends BlockBase implements ContainerFactoryPluginInterfac
    *   The id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin definition parameters.
-   * @param \Drupal\Core\Session\AccountProxyInterface $accountProxy
-   *   The Account Proxy service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
-   *   The Entity Type Manager.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
-   *   The config factory.
    * @param \Drupal\drupal_api\Services\DrupalAPIClient $drupalApiClient
    *   The Drupal API Client (custom)
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, private AccountProxyInterface $accountProxy, private EntityTypeManagerInterface $entityTypeManager, private ConfigFactoryInterface $configFactory, private DrupalAPIClient $drupalApiClient) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, private DrupalAPIClient $drupalApiClient) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
@@ -55,9 +46,6 @@ class TopIssuesBlock extends BlockBase implements ContainerFactoryPluginInterfac
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('current_user'),
-      $container->get('entity_type.manager'),
-      $container->get('config.factory'),
       $container->get('drupal_api.drupal_api_calls'),
     );
   }
@@ -68,7 +56,7 @@ class TopIssuesBlock extends BlockBase implements ContainerFactoryPluginInterfac
    * @return array
    *   renderable array
    */
-  public function build() {
+  public function build(): array {
     // Retrieve from block config.
     $config = $this->getConfiguration();
     $project = $config['project_nid'];
@@ -76,13 +64,16 @@ class TopIssuesBlock extends BlockBase implements ContainerFactoryPluginInterfac
     $items = $config['items'];
 
     $request = $this->drupalApiClient->getTopIssues($project);
+    $list = [];
     foreach (json_decode($request)->list as $value) {
       $list[] = (array) $value;
     }
 
-    array_multisort(array_map(function ($element) {
+    $commentCounts = array_map(function ($element) {
       return $element['comment_count'];
-    }, $list), SORT_DESC, $list);
+    }, $list);
+
+    array_multisort($commentCounts, SORT_DESC, $list);
 
     return [
       '#theme' => 'top_issues_block',

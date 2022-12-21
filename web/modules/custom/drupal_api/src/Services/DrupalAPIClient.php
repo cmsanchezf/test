@@ -4,7 +4,6 @@ namespace Drupal\drupal_api\Services;
 
 use GuzzleHttp\ClientInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 
 /**
@@ -21,12 +20,12 @@ class DrupalAPIClient {
    *
    * @param \GuzzleHttp\ClientInterface $httpClient
    *   The HTTP client.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
-   *   The Config Factory service.
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $loggerFactory
    *   The logger factory.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+   *   The cache.
    */
-  public function __construct(private ClientInterface $httpClient, private LoggerChannelFactoryInterface $loggerFactory, private ConfigFactoryInterface $configFactory, private CacheBackendInterface $cache) {
+  public function __construct(private ClientInterface $httpClient, private LoggerChannelFactoryInterface $loggerFactory, private CacheBackendInterface $cache) {
   }
 
   /**
