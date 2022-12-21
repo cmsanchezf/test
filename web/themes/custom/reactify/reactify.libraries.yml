@@ -1,0 +1,13 @@
+reactify:
+  version: 1.0
+  css:
+    theme:
+      css/style.css: {}
+  js:
+    js/app.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - reactify/react
+    - reactify/typescript

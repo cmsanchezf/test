@@ -1,0 +1,31 @@
+name: Reactify
+type: theme
+description: A Simple, clean, accessible and flexible Drupal front-end theme based on React with Typescript.
+base theme: olivero
+core_version_requirement: ^9
+scripts: 
+  js/App.js
+libraries:
+  - reactify/react
+  - reactify/typescript
+  
+regions:
+  top_bar: 'Extra Top bar'
+  secondary_menu: 'Secondary menu'  
+  sliding_panel: 'Sliding panel'
+  header: 'Header'
+  hero: 'Hero (full width)'
+  highlighted: 'Highlighted'
+  primary_menu: 'Primary menu'
+  breadcrumb: 'Breadcrumb'
+  featured_top: 'Featured top'
+  content: 'Content'
+  content_bottom: 'Content bottom'
+  sidebar_first: 'Sidebar first'
+  sidebar_second: 'Sidebar second'
+  footer: 'Footer'
+  footer_info: 'Extra Footer info'
+
+# Information added by Drupal.org packaging script on 2022-06-29
+version: '0.0.1-beta1'
+project: 'reactify_drupal'

@@ -1,0 +1,22 @@
+uuid: 68627f67-f854-4475-8b88-b83dc682c3f7
+langcode: es
+status: true
+dependencies:
+  theme:
+    - reactify
+_core:
+  default_config_hash: ydSxdq7R66I8UMC460rOzlfzvlUL4VRbdwc6z9DWaUI
+id: reactify_secondary_local_tasks
+theme: reactify
+region: highlighted
+weight: -2
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: 'Solapas secundarias'
+  label_display: '0'
+  provider: core
+  primary: false
+  secondary: true
+visibility: {  }

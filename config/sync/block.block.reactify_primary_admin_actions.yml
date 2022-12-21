@@ -1,0 +1,20 @@
+uuid: 0174876c-4665-437e-a408-4f01033d0a81
+langcode: es
+status: true
+dependencies:
+  theme:
+    - reactify
+_core:
+  default_config_hash: Q9_2whdOj1YIomfvsIfopROW4FT_X5pY0DjdOiOaQ5U
+id: reactify_primary_admin_actions
+theme: reactify
+region: highlighted
+weight: -5
+provider: null
+plugin: local_actions_block
+settings:
+  id: local_actions_block
+  label: 'Acciones principales de administración'
+  label_display: '0'
+  provider: core
+visibility: {  }

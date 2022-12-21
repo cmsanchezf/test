@@ -1,0 +1,23 @@
+uuid: 16243fca-f983-4594-8a98-39d91c357fb3
+langcode: es
+status: true
+dependencies:
+  module:
+    - node
+  theme:
+    - reactify
+_core:
+  default_config_hash: 0gq3VPg-_UM69FCCWurLFIrrnIjC2HLKhwo9iQNtcUo
+id: reactify_syndicate
+theme: reactify
+region: top_bar
+weight: 0
+provider: null
+plugin: node_syndicate_block
+settings:
+  id: node_syndicate_block
+  label: 'Canal RSS'
+  label_display: '0'
+  provider: node
+  block_count: 10
+visibility: {  }

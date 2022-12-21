@@ -1,0 +1,22 @@
+uuid: e2eb2349-7ec3-4162-b6f1-98baac4efd40
+langcode: es
+status: true
+dependencies:
+  module:
+    - help
+  theme:
+    - reactify
+_core:
+  default_config_hash: VfPFqqxfkomud5CO8DUijw85QIl9GIxh_nIxLOYESxg
+id: reactify_help
+theme: reactify
+region: top_bar
+weight: -7
+provider: null
+plugin: help_block
+settings:
+  id: help_block
+  label: Ayuda
+  label_display: '0'
+  provider: help
+visibility: {  }

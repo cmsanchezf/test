@@ -1,0 +1,22 @@
+{
+  "scripts": {
+    "build": "./node_modules/.bin/tsc"
+  },
+  "dependencies": {
+    "@types/css": "^0.0.33",
+    "@types/react": "^18.0.26",
+    "@types/react-dom": "^18.0.9",
+    "@types/react-router": "^5.1.19",
+    "@types/react-router-dom": "^5.3.3",
+    "@types/typescript": "^2.0.0",
+    "@types/umd": "^3.0.1",
+    "esnext": "^3.3.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router": "^6.4.5",
+    "react-router-dom": "^6.4.5"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.4"
+  }
+}

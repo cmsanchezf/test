@@ -1,0 +1,22 @@
+uuid: c9a7246c-57d8-4007-a881-bd55240a5990
+langcode: es
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - reactify
+_core:
+  default_config_hash: eYL19CLDyinGTWYQfBD1DswWzglEotE_kHnHx3AxTXM
+id: reactify_powered
+theme: reactify
+region: top_bar
+weight: 0
+provider: null
+plugin: system_powered_by_block
+settings:
+  id: system_powered_by_block
+  label: 'Funciona con Drupal'
+  label_display: '0'
+  provider: system
+visibility: {  }

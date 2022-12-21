@@ -1,0 +1,22 @@
+uuid: ddb5cf2c-b9e2-4941-84ad-6addcd22d361
+langcode: es
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - reactify
+_core:
+  default_config_hash: VhBzWb7lMRtIOg9G7VSw_0uopi-7zXeHq4vXqqV1HFE
+id: reactify_breadcrumbs
+theme: reactify
+region: breadcrumb
+weight: 0
+provider: null
+plugin: system_breadcrumb_block
+settings:
+  id: system_breadcrumb_block
+  label: 'Enlaces de ayuda a la navegación'
+  label_display: '0'
+  provider: system
+visibility: {  }
