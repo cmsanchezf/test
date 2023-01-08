@@ -1,5 +1,5 @@
-uuid: c049bdb9-cc45-49ab-887b-0a4aace1fc35
-langcode: es
+uuid: 11a73049-bc52-4b93-a279-48862739f5a2
+langcode: en
 status: true
 dependencies:
   config:
@@ -13,7 +13,7 @@ id: node.page.body
 field_name: body
 entity_type: node
 bundle: page
-label: Cuerpo
+label: Body
 description: ''
 required: false
 translatable: true

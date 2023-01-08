@@ -1,5 +1,5 @@
-uuid: 879f4ecf-58b1-41d3-994a-1e177822bf05
-langcode: es
+uuid: 796dafe8-523f-4d5e-8d8b-7b49ac456d7c
+langcode: en
 status: true
 dependencies:
   config:
@@ -13,7 +13,7 @@ id: node.article.field_image
 field_name: field_image
 entity_type: node
 bundle: article
-label: Imagen
+label: Image
 description: ''
 required: false
 translatable: true

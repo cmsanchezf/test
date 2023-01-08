@@ -1,9 +1,9 @@
 _core:
   default_config_hash: VDJxTZtQR21qB4lvOq8zszJZLvLKrSPQpdn2E3T71Ww
-langcode: es
-uuid: 735318e3-c4bf-46ef-9f70-3e2aebeb47c3
-name: borjatest
-mail: cmsanchez@emergya.com
+langcode: en
+uuid: 59dbf134-eaf9-4b1e-9076-d21f6f5a01b9
+name: 'Drush Site-Install'
+mail: admin@example.com
 slogan: ''
 page:
   403: ''
@@ -11,4 +11,4 @@ page:
   front: /node
 admin_compact_mode: false
 weight_select_max: 100
-default_langcode: es
+default_langcode: en

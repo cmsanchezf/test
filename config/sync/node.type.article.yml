@@ -1,12 +1,12 @@
-uuid: 2a808e5d-c8ca-4762-91ac-d942f8e7b945
-langcode: es
+uuid: 31409ff0-417d-49bc-aa02-9d28b12bf763
+langcode: en
 status: true
 dependencies: {  }
 _core:
   default_config_hash: AeW1SEDgb1OTQACAWGhzvMknMYAJlcZu0jljfeU3oso
-name: Artículo
+name: Article
 type: article
-description: 'Use los <em>artículos</em> para contenido que tenga relevancia temporal como las noticias o las publicaciones en blogs.'
+description: 'Use <em>articles</em> for time-sensitive content like news, press releases or blog posts.'
 help: ''
 new_revision: true
 preview_mode: 1

@@ -1,5 +1,5 @@
-uuid: ff6cd618-ed3f-464a-b6b6-90df9df4edcf
-langcode: es
+uuid: bd437f57-baac-4ab5-bb76-db092ddec2d9
+langcode: en
 status: true
 dependencies:
   module:
@@ -7,7 +7,7 @@ dependencies:
 _core:
   default_config_hash: k3aUaZXGDuhkek2TZIee0PApOPTvYZLadziekdyHA5A
 id: user_search
-label: Usuarios
+label: Users
 path: user
 weight: 0
 plugin: user_search

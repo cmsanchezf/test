@@ -1,5 +1,5 @@
-uuid: b2624093-ede0-4664-801d-618b99391459
-langcode: es
+uuid: f055c36f-ab4b-4139-9fef-826bdbb8240a
+langcode: en
 status: true
 dependencies:
   module:
@@ -9,20 +9,20 @@ dependencies:
 _core:
   default_config_hash: S_NN2ubd_NovTfgzbHVlZMmIJJQS-3h9h3inzbaFUMY
 id: comments_recent
-label: 'Comentarios recientes'
+label: 'Recent comments'
 module: views
-description: 'Comentarios recientes.'
+description: 'Recent comments.'
 tag: default
 base_table: comment_field_data
 base_field: cid
 display:
   default:
     id: default
-    display_title: 'Por defecto'
+    display_title: Default
     display_plugin: default
     position: 0
     display_options:
-      title: 'Comentarios recientes'
+      title: 'Recent comments'
       fields:
         subject:
           id: subject
@@ -132,7 +132,7 @@ display:
           type: timestamp_ago
           settings:
             future_format: '@interval hence'
-            past_format: 'Hace @interval'
+            past_format: '@interval ago'
             granularity: 2
       pager:
         type: some
@@ -158,7 +158,7 @@ display:
           plugin_id: text_custom
           label: ''
           empty: true
-          content: 'No hay comentarios disponibles.'
+          content: 'No comments available.'
           tokenize: false
       sorts:
         created:
@@ -252,13 +252,13 @@ display:
       tags: {  }
   block_1:
     id: block_1
-    display_title: Bloque
+    display_title: Block
     display_plugin: block
     position: 1
     display_options:
       display_extenders: {  }
-      block_description: 'Comentarios recientes'
-      block_category: 'Listas (Views)'
+      block_description: 'Recent comments'
+      block_category: 'Lists (Views)'
       allow:
         items_per_page: true
     cache_metadata:
