@@ -1,0 +1,7 @@
+entity.variant.settings:
+  path: 'admin/structure/variant'
+  defaults:
+    _form: '\Drupal\variant\Form\VariantSettingsForm'
+    _title: 'Variant'
+  requirements:
+    _permission: 'administer variant'

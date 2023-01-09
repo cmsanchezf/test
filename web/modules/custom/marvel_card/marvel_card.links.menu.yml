@@ -1,0 +1,10 @@
+entity.marvel_card.settings:
+  title: 'Marvel card'
+  description: 'Configure a Marvel card entity type.'
+  route_name:  entity.marvel_card.settings
+  parent: system.admin_structure
+entity.marvel_card.collection:
+  title: 'Marvel cards'
+  description: 'List of marvel cards.'
+  route_name: entity.marvel_card.collection
+  parent: system.admin_content

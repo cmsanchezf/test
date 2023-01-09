@@ -1,0 +1,10 @@
+entity.variant.edit_form:
+  route_name: entity.variant.edit_form
+  group: variant
+  title: Edit
+
+entity.variant.delete_form:
+  route_name: entity.variant.delete_form
+  group: variant
+  title: Delete
+  weight: 10

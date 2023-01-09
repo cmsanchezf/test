@@ -1,0 +1,10 @@
+entity.variant.settings:
+  title: 'Variant'
+  description: 'Configure a Variant entity type.'
+  route_name:  entity.variant.settings
+  parent: system.admin_structure
+entity.variant.collection:
+  title: 'Variants'
+  description: 'List of variants.'
+  route_name: entity.variant.collection
+  parent: system.admin_content

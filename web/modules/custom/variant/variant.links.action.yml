@@ -1,0 +1,5 @@
+variant.add_form:
+  title: 'Add variant'
+  route_name: entity.variant.add_form
+  appears_on:
+    - entity.variant.collection

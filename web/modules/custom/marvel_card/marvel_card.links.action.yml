@@ -1,0 +1,5 @@
+marvel_card.add_form:
+  title: 'Add marvel card'
+  route_name: entity.marvel_card.add_form
+  appears_on:
+    - entity.marvel_card.collection

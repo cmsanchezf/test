@@ -1,0 +1,11 @@
+administer variant:
+  title: 'Administer variant settings'
+  restrict access: true
+delete variant:
+  title: Delete variant
+create variant:
+  title: Create variant
+view variant:
+  title: View variant
+edit variant:
+  title: Edit variant

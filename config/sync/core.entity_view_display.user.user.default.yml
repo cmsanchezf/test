@@ -1,5 +1,5 @@
-uuid: cd8e20f7-f8e7-4055-a357-135ba98f6e20
-langcode: en
+uuid: b0d92808-2bd7-4e80-9dbc-869e1fe58e3d
+langcode: es
 status: true
 dependencies:
   config:
@@ -22,11 +22,12 @@ content:
     type: image
     label: hidden
     settings:
-      image_style: thumbnail
       image_link: content
+      image_style: thumbnail
       image_loading:
         attribute: lazy
     third_party_settings: {  }
     weight: 0
     region: content
-hidden: {  }
+hidden:
+  langcode: true

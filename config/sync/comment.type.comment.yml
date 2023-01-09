@@ -1,10 +1,10 @@
-uuid: 76fcd3b0-0c55-4d40-a137-75bc0e514d32
-langcode: en
+uuid: 1ac89b1f-94b1-4164-8be4-0862754d4b1d
+langcode: es
 status: true
 dependencies: {  }
 _core:
   default_config_hash: bqZsN31T2n0UjcbyCpOPi9D2iO0sAOHR7FnEs9qMvaA
 id: comment
-label: 'Default comments'
+label: 'Comentarios por defecto'
 target_entity_type_id: node
-description: 'Allows commenting on content'
+description: 'Permite comentar el contenido'

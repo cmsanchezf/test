@@ -1,0 +1,10 @@
+entity.marvel_tag.settings:
+  title: 'Marvel tag'
+  description: 'Configure a Marvel tag entity type.'
+  route_name:  entity.marvel_tag.settings
+  parent: system.admin_structure
+entity.marvel_tag.collection:
+  title: 'Marvel tags'
+  description: 'List of marvel tags.'
+  route_name: entity.marvel_tag.collection
+  parent: system.admin_content

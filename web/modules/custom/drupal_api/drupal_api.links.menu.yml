@@ -1,6 +1,0 @@
-drupal_api.admin:
-  title: 'Top Issues Config'
-  description: 'Top Issues block configuration'
-  parent: system.admin_config
-  url: 'internal:/admin/drupal-api/config'
-  weight: 100

@@ -1,0 +1,10 @@
+entity.marvel_tag.edit_form:
+  route_name: entity.marvel_tag.edit_form
+  group: marvel_tag
+  title: Edit
+
+entity.marvel_tag.delete_form:
+  route_name: entity.marvel_tag.delete_form
+  group: marvel_tag
+  title: Delete
+  weight: 10

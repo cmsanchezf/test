@@ -1,0 +1,23 @@
+entity.marvel_card.settings:
+  path: 'admin/structure/marvel-card'
+  defaults:
+    _form: '\Drupal\marvel_card\Form\MarvelCardSettingsForm'
+    _title: 'Marvel card'
+  requirements:
+    _permission: 'administer marvel card'
+
+marvel_card.add:
+  path: '/marvel-card/add'
+  defaults:
+    _form: '\Drupal\marvel_card\Form\MarvelCardForm'
+    _title: 'Add Marvel card'
+  requirements:
+    _permission: 'administer marvel card'
+
+marvel_card.add_cards:
+  path: '/add-cards'
+  defaults:
+    _controller: '\Drupal\marvel_card\Controller\AddCardsController::add'
+    _title: 'Race video'
+  requirements:
+    _permission: 'access content'

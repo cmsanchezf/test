@@ -1,0 +1,22 @@
+entity.marvel_tag.settings:
+  title: 'Settings'
+  route_name: entity.marvel_tag.settings
+  base_route: entity.marvel_tag.settings
+entity.marvel_tag.view:
+  title: 'View'
+  route_name: entity.marvel_tag.canonical
+  base_route: entity.marvel_tag.canonical
+entity.marvel_tag.edit_form:
+  title: 'Edit'
+  route_name: entity.marvel_tag.edit_form
+  base_route: entity.marvel_tag.canonical
+entity.marvel_tag.delete_form:
+  title: 'Delete'
+  route_name: entity.marvel_tag.delete_form
+  base_route: entity.marvel_tag.canonical
+  weight: 10
+entity.marvel_tag.collection:
+  title: 'Marvel tags'
+  route_name: entity.marvel_tag.collection
+  base_route: system.admin_content
+  weight: 10

@@ -1,0 +1,5 @@
+marvel_tag.add_form:
+  title: 'Add marvel tag'
+  route_name: entity.marvel_tag.add_form
+  appears_on:
+    - entity.marvel_tag.collection

@@ -1,0 +1,11 @@
+administer marvel card:
+  title: 'Administer marvel card settings'
+  restrict access: true
+delete marvel card:
+  title: Delete marvel card
+create marvel card:
+  title: Create marvel card
+view marvel card:
+  title: View marvel card
+edit marvel card:
+  title: Edit marvel card

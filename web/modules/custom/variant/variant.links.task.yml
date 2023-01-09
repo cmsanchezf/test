@@ -1,0 +1,22 @@
+entity.variant.settings:
+  title: 'Settings'
+  route_name: entity.variant.settings
+  base_route: entity.variant.settings
+entity.variant.view:
+  title: 'View'
+  route_name: entity.variant.canonical
+  base_route: entity.variant.canonical
+entity.variant.edit_form:
+  title: 'Edit'
+  route_name: entity.variant.edit_form
+  base_route: entity.variant.canonical
+entity.variant.delete_form:
+  title: 'Delete'
+  route_name: entity.variant.delete_form
+  base_route: entity.variant.canonical
+  weight: 10
+entity.variant.collection:
+  title: 'Variants'
+  route_name: entity.variant.collection
+  base_route: system.admin_content
+  weight: 10

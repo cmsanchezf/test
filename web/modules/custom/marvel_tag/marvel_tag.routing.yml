@@ -1,0 +1,7 @@
+entity.marvel_tag.settings:
+  path: 'admin/structure/marvel-tag'
+  defaults:
+    _form: '\Drupal\marvel_tag\Form\MarvelTagSettingsForm'
+    _title: 'Marvel tag'
+  requirements:
+    _permission: 'administer marvel tag'

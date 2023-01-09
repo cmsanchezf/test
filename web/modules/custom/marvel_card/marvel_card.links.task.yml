@@ -1,0 +1,22 @@
+entity.marvel_card.settings:
+  title: 'Settings'
+  route_name: entity.marvel_card.settings
+  base_route: entity.marvel_card.settings
+entity.marvel_card.view:
+  title: 'View'
+  route_name: entity.marvel_card.canonical
+  base_route: entity.marvel_card.canonical
+entity.marvel_card.edit_form:
+  title: 'Edit'
+  route_name: entity.marvel_card.edit_form
+  base_route: entity.marvel_card.canonical
+entity.marvel_card.delete_form:
+  title: 'Delete'
+  route_name: entity.marvel_card.delete_form
+  base_route: entity.marvel_card.canonical
+  weight: 10
+entity.marvel_card.collection:
+  title: 'Marvel cards'
+  route_name: entity.marvel_card.collection
+  base_route: system.admin_content
+  weight: 10
