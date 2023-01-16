@@ -1,0 +1,5 @@
+marvel_deck.add_form:
+  title: 'Add marvel deck'
+  route_name: entity.marvel_deck.add_form
+  appears_on:
+    - entity.marvel_deck.collection

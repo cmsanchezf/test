@@ -1,0 +1,38 @@
+uuid: be82414a-523c-4209-b4a5-31194994c77b
+langcode: es
+status: true
+dependencies:
+  module:
+    - marvel_tag
+    - serialization
+    - user
+_core:
+  default_config_hash: YdalmsL3uwmeBVVfyv6ABfebnNq8gVoBj-M4TGTvkv8
+id: entity.marvel_tag
+plugin_id: 'entity:marvel_tag'
+granularity: method
+configuration:
+  GET:
+    supported_formats:
+      - json
+      - xml
+    supported_auth:
+      - cookie
+  POST:
+    supported_formats:
+      - json
+      - xml
+    supported_auth:
+      - cookie
+  DELETE:
+    supported_formats:
+      - json
+      - xml
+    supported_auth:
+      - cookie
+  PATCH:
+    supported_formats:
+      - json
+      - xml
+    supported_auth:
+      - cookie

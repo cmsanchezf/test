@@ -6,6 +6,7 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\marvel_tag\MarvelTagInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines the marvel tag entity class.
@@ -52,15 +53,39 @@ use Drupal\Core\Entity\EntityTypeInterface;
 class MarvelTag extends ContentEntityBase implements MarvelTagInterface {
 
   /**
-   *
+   * {@inheritdoc}
+   */
+  public function setId($id) {
+    $this->get('tag_id')->value = $id;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setTag($tag) {
+    $this->get('tag')->value = $tag;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setTagSlug($tag_slug) {
+    $this->get('tag_slug')->value = $tag_slug;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
 
     $fields = parent::baseFieldDefinitions($entity_type);
 
     $fields['tag_id'] = BaseFieldDefinition::create('integer')
-      ->setLabel(t('Cost'))
-      ->setDescription(t('The id of the Marvel Tag entity.'))
+      ->setLabel(new TranslatableMarkup('Cost'))
+      ->setDescription(new TranslatableMarkup('The id of the Marvel Tag entity.'))
       ->setRevisionable(FALSE)
       ->setDefaultValue(0)
       ->setDisplayOptions('view', [
@@ -76,8 +101,8 @@ class MarvelTag extends ContentEntityBase implements MarvelTagInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['tag'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Tag'))
-      ->setDescription(t('The tag of the Marvel Tag entity.'))
+      ->setLabel(new TranslatableMarkup('Tag'))
+      ->setDescription(new TranslatableMarkup('The tag of the Marvel Tag entity.'))
       ->setRevisionable(FALSE)
       ->setSettings([
         'max_length' => 50,
@@ -97,8 +122,8 @@ class MarvelTag extends ContentEntityBase implements MarvelTagInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['tag_slug'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Tag Slug'))
-      ->setDescription(t('The tag slug of the Marvel Tag entity.'))
+      ->setLabel(new TranslatableMarkup('Tag Slug'))
+      ->setDescription(new TranslatableMarkup('The tag slug of the Marvel Tag entity.'))
       ->setRevisionable(FALSE)
       ->setSettings([
         'max_length' => 50,

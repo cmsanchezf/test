@@ -6,6 +6,7 @@ use Drupal\variant\VariantInterface;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines the variant entity class.
@@ -56,54 +57,130 @@ use Drupal\Core\Entity\EntityTypeInterface;
 class Variant extends ContentEntityBase implements VariantInterface {
 
   /**
-   *
+   * {@inheritdoc}
+   */
+  public function setCid($cid) {
+    $this->get('cid')->value = $cid;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setVid($vid) {
+    $this->get('vid')->value = $vid;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setArt($art) {
+    $this->get('art')->appendItem($art);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setFileName($art_filename) {
+    $this->get('art_filename')->value = $art_filename;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setRarity($rarity) {
+    $this->get('rarity')->value = $rarity;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setRaritySlug($rarity_slug) {
+    $this->get('rarity_slug')->value = $rarity_slug;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setVariantOrder($variant_order) {
+    $this->get('variant_order')->value = $variant_order;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setFullDescription($full_description) {
+    $this->get('full_description')->value = $full_description;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setStatus($status) {
+    $this->get('status')->value = $status;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
 
     $fields = parent::baseFieldDefinitions($entity_type);
 
-    $fields['cid'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('CID'))
-      ->setDescription(t('The Card entity to which the Variant belongs.'))
+    $fields['cid'] = BaseFieldDefinition::create('string')
+      ->setLabel(new TranslatableMarkup('CID'))
+      ->setDescription(new TranslatableMarkup('The Card entity to which the Variant belongs.'))
       ->setRevisionable(TRUE)
-      ->setSetting('target_type', 'marvel_card')
+      ->setSettings([
+        'max_length' => 50,
+        'text_processing' => 0,
+      ])
+      ->setDefaultValue('')
       ->setDisplayOptions('view', [
         'label' => 'hidden',
-        'type' => 'entity_reference_label',
-        'weight' => 0,
+        'type' => 'string',
+        'weight' => 2,
       ])
       ->setDisplayOptions('form', [
-        'type' => 'entity_reference_autocomplete',
-        'weight' => 0,
+        'type' => 'string_textfield',
+        'weight' => 2,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['vid'] = BaseFieldDefinition::create('integer')
-      ->setLabel(t('Variant ID'))
-      ->setDescription(t('The variant ID of the Variant entity.'))
+      ->setLabel(new TranslatableMarkup('Variant ID'))
+      ->setDescription(new TranslatableMarkup('The variant ID of the Variant entity.'))
       ->setReadOnly(TRUE);
 
     $fields['art'] = BaseFieldDefinition::create('entity_reference')
-    ->setLabel(t('Art'))
-    ->setDescription(t('The art image of the Marvel Card entity.'))
-    ->setRevisionable(FALSE)
-    ->setSetting('target_type', 'media')
-    ->setDisplayOptions('view', [
-      'label' => 'hidden',
-      'type' => 'image',
-      'weight' => 2,
-    ])
-    ->setDisplayOptions('form', [
-      'type' => 'media_thumbnail',
-      'weight' => 2,
-    ])
-    ->setDisplayConfigurable('form', TRUE)
-    ->setDisplayConfigurable('view', TRUE);
+      ->setLabel(new TranslatableMarkup('Art'))
+      ->setDescription(new TranslatableMarkup('The art image of the Marvel Card entity.'))
+      ->setRevisionable(FALSE)
+      ->setSetting('target_type', 'media')
+      ->setDisplayOptions('view', [
+        'label' => 'hidden',
+        'type' => 'image',
+        'weight' => 2,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'media_thumbnail',
+        'weight' => 2,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
 
     $fields['art_filename'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Art Filename'))
-      ->setDescription(t('The art filename of the Variant entity.'))
+      ->setLabel(new TranslatableMarkup('Art Filename'))
+      ->setDescription(new TranslatableMarkup('The art filename of the Variant entity.'))
       ->setRevisionable(TRUE)
       ->setSettings([
         'max_length' => 50,
@@ -123,8 +200,8 @@ class Variant extends ContentEntityBase implements VariantInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['rarity'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Rarity'))
-      ->setDescription(t('The ratity of the Variant entity.'))
+      ->setLabel(new TranslatableMarkup('Rarity'))
+      ->setDescription(new TranslatableMarkup('The ratity of the Variant entity.'))
       ->setRevisionable(TRUE)
       ->setSettings([
         'max_length' => 50,
@@ -144,8 +221,8 @@ class Variant extends ContentEntityBase implements VariantInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['rarity_slug'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Rarity Slug'))
-      ->setDescription(t('The rarity slug of the Variant entity.'))
+      ->setLabel(new TranslatableMarkup('Rarity Slug'))
+      ->setDescription(new TranslatableMarkup('The rarity slug of the Variant entity.'))
       ->setRevisionable(TRUE)
       ->setSettings([
         'max_length' => 50,
@@ -165,8 +242,8 @@ class Variant extends ContentEntityBase implements VariantInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['variant_order'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Variant Order'))
-      ->setDescription(t('The variant order of the Variant entity.'))
+      ->setLabel(new TranslatableMarkup('Variant Order'))
+      ->setDescription(new TranslatableMarkup('The variant order of the Variant entity.'))
       ->setRevisionable(TRUE)
       ->setSettings([
         'max_length' => 50,
@@ -184,9 +261,10 @@ class Variant extends ContentEntityBase implements VariantInterface {
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
+
     $fields['status'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Status'))
-      ->setDescription(t('The status of the Variant entity.'))
+      ->setLabel(new TranslatableMarkup('Status'))
+      ->setDescription(new TranslatableMarkup('The status of the Variant entity.'))
       ->setRevisionable(TRUE)
       ->setSettings([
         'max_length' => 50,
@@ -206,8 +284,8 @@ class Variant extends ContentEntityBase implements VariantInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['full_description'] = BaseFieldDefinition::create('text_long')
-      ->setLabel(t('Full Description'))
-      ->setDescription(t('The full description of the Variant entity.'))
+      ->setLabel(new TranslatableMarkup('Full Description'))
+      ->setDescription(new TranslatableMarkup('The full description of the Variant entity.'))
       ->setRevisionable(TRUE)
       ->setSettings([
         'text_processing' => 0,
@@ -226,16 +304,16 @@ class Variant extends ContentEntityBase implements VariantInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
-      ->setLabel(t('Created'))
-      ->setDescription(t('The time that the entity was created.'));
+      ->setLabel(new TranslatableMarkup('Created'))
+      ->setDescription(new TranslatableMarkup('The time that the entity was created.'));
 
     $fields['changed'] = BaseFieldDefinition::create('changed')
-      ->setLabel(t('Changed'))
-      ->setDescription(t('The time that the entity was last edited.'));
+      ->setLabel(new TranslatableMarkup('Changed'))
+      ->setDescription(new TranslatableMarkup('The time that the entity was last edited.'));
 
     $fields['revision_translation_affected'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(t('Revision translation affected'))
-      ->setDescription(t('Indicates if the last edit of a translation belongs to current revision.'))
+      ->setLabel(new TranslatableMarkup('Revision translation affected'))
+      ->setDescription(new TranslatableMarkup('Indicates if the last edit of a translation belongs to current revision.'))
       ->setReadOnly(TRUE)
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE);

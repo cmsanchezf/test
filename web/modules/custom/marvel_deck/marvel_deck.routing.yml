@@ -1,0 +1,15 @@
+entity.marvel_deck.settings:
+  path: 'admin/structure/marvel-deck'
+  defaults:
+    _form: '\Drupal\marvel_deck\Form\MarvelDeckSettingsForm'
+    _title: 'Marvel deck'
+  requirements:
+    _permission: 'administer marvel deck'
+    
+marvel_deck.add_decks:
+  path: '/add-decks'
+  defaults:
+    _controller: '\Drupal\marvel_deck\Controller\DecksController::add'
+    _title: 'Race video'
+  requirements:
+    _permission: 'access content'

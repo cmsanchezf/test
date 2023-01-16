@@ -1,0 +1,22 @@
+entity.marvel_deck.settings:
+  title: 'Settings'
+  route_name: entity.marvel_deck.settings
+  base_route: entity.marvel_deck.settings
+entity.marvel_deck.view:
+  title: 'View'
+  route_name: entity.marvel_deck.canonical
+  base_route: entity.marvel_deck.canonical
+entity.marvel_deck.edit_form:
+  title: 'Edit'
+  route_name: entity.marvel_deck.edit_form
+  base_route: entity.marvel_deck.canonical
+entity.marvel_deck.delete_form:
+  title: 'Delete'
+  route_name: entity.marvel_deck.delete_form
+  base_route: entity.marvel_deck.canonical
+  weight: 10
+entity.marvel_deck.collection:
+  title: 'Marvel decks'
+  route_name: entity.marvel_deck.collection
+  base_route: system.admin_content
+  weight: 10

@@ -1,0 +1,38 @@
+uuid: 9017d854-682b-4af4-99b4-5a0034864f80
+langcode: es
+status: true
+dependencies:
+  module:
+    - serialization
+    - user
+    - variant
+_core:
+  default_config_hash: leP7wethPXns3fPauo3E3pus5XmGiOp4Hp8BSDY-n9s
+id: entity.variant
+plugin_id: 'entity:variant'
+granularity: method
+configuration:
+  GET:
+    supported_formats:
+      - json
+      - xml
+    supported_auth:
+      - cookie
+  POST:
+    supported_formats:
+      - json
+      - xml
+    supported_auth:
+      - cookie
+  DELETE:
+    supported_formats:
+      - json
+      - xml
+    supported_auth:
+      - cookie
+  PATCH:
+    supported_formats:
+      - json
+      - xml
+    supported_auth:
+      - cookie

@@ -25,8 +25,8 @@ function marvel_tag_theme() {
  *
  * @param array $variables
  *   An associative array containing:
- *   - elements: An associative array containing the marvel tag information and any
- *     fields attached to the entity.
+ *   - elements: An associative array containing the marvel tag information
+ *     and any fields attached to the entity.
  *   - attributes: HTML attributes for the containing element.
  */
 function template_preprocess_marvel_tag(array &$variables) {

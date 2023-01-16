@@ -2,11 +2,13 @@
 
 namespace Drupal\marvel_card\Entity;
 
+use Drupal\media\MediaInterface;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\marvel_card\MarvelCardInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines the marvel Marvel card entity class.
@@ -54,17 +56,177 @@ use Drupal\marvel_card\MarvelCardInterface;
  *   field_ui_base_route = "entity.marvel_card.settings",
  * )
  */
-class MarvelCard extends ContentEntityBase implements MarvelCardInterface {
+class MarvelCard extends ContentEntityBase implements MarvelCardInterface{
 
   /**
-   *
+   * {@inheritdoc}
+   */
+  public function setCid($cid) {
+    $this->get('cid')->value = $cid;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setName($name) {
+    $this->get('name')->value = $name;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setType($type) {
+    $this->get('type')->value = $type;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setCost($cost) {
+    $this->get('cost')->value = $cost;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setPower($power) {
+    $this->get('power')->value = $power;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setAbility($ability) {
+    $this->get('ability')->value = $ability;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setArt(MediaInterface $art) {
+    $this->get('art')->appendItem($art);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setAlternateArt($alternate_art) {
+    $this->get('alternate_art')->value = $alternate_art;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUrl($url) {
+    $this->get('url')->value = $url;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setStatus($status) {
+    $this->get('status')->value = $status;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setCarddefid($carddefid) {
+    $this->get('carddefid')->value = $carddefid;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setVariant($variant) {
+    $this->get('variants')->appendItem($variant);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setSource($source) {
+    $this->get('source')->value = $source;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setSourceSlug($source_slug) {
+    $this->get('source_slug')->value = $source_slug;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setTag($tag) {
+    $this->get('tags')->appendItem($tag);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setRarity($rarity) {
+    $this->get('rarity')->value = $rarity;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setRaritySlug($rarity_slug) {
+    $this->get('rarity_slug')->value = $rarity_slug;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setDifficulty($difficulty) {
+    $this->get('difficulty')->value = $difficulty;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setCreated($created) {
+    $this->get('created')->value = $created;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setChanged($changed) {
+    $this->get('changed')->value = $changed;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
 
     $fields['cid'] = BaseFieldDefinition::create('integer')
-      ->setLabel(t('CID'))
-      ->setDescription(t('The cost of the Marvel Card entity.'))
+      ->setLabel(new TranslatableMarkup('CID'))
+      ->setDescription(new TranslatableMarkup('The cost of the Marvel Card entity.'))
       ->setRevisionable(FALSE)
       ->setDefaultValue(0)
       ->setDisplayOptions('view', [
@@ -80,11 +242,11 @@ class MarvelCard extends ContentEntityBase implements MarvelCardInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['name'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Name'))
-      ->setDescription(t('The name of the Marvel Card entity.'))
+      ->setLabel(new TranslatableMarkup('Name'))
+      ->setDescription(new TranslatableMarkup('The name of the Marvel Card entity.'))
       ->setRevisionable(FALSE)
       ->setSettings([
-        'max_length' => 50,
+        'max_length' => 255,
         'text_processing' => 0,
       ])
       ->setDefaultValue('')
@@ -101,11 +263,11 @@ class MarvelCard extends ContentEntityBase implements MarvelCardInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['type'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Type'))
-      ->setDescription(t('The type of the Marvel Card entity.'))
+      ->setLabel(new TranslatableMarkup('Type'))
+      ->setDescription(new TranslatableMarkup('The type of the Marvel Card entity.'))
       ->setRevisionable(FALSE)
       ->setSettings([
-        'max_length' => 50,
+        'max_length' => 255,
         'text_processing' => 0,
       ])
       ->setDefaultValue('')
@@ -122,8 +284,8 @@ class MarvelCard extends ContentEntityBase implements MarvelCardInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['cost'] = BaseFieldDefinition::create('integer')
-      ->setLabel(t('Cost'))
-      ->setDescription(t('The cost of the Marvel Card entity.'))
+      ->setLabel(new TranslatableMarkup('Cost'))
+      ->setDescription(new TranslatableMarkup('The cost of the Marvel Card entity.'))
       ->setRevisionable(FALSE)
       ->setDefaultValue(0)
       ->setDisplayOptions('view', [
@@ -139,8 +301,8 @@ class MarvelCard extends ContentEntityBase implements MarvelCardInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['power'] = BaseFieldDefinition::create('integer')
-      ->setLabel(t('Power'))
-      ->setDescription(t('The power of the Marvel Card entity.'))
+      ->setLabel(new TranslatableMarkup('Power'))
+      ->setDescription(new TranslatableMarkup('The power of the Marvel Card entity.'))
       ->setRevisionable(FALSE)
       ->setDefaultValue(0)
       ->setDisplayOptions('view', [
@@ -156,8 +318,8 @@ class MarvelCard extends ContentEntityBase implements MarvelCardInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['ability'] = BaseFieldDefinition::create('string_long')
-      ->setLabel(t('Ability'))
-      ->setDescription(t('The ability of the Marvel Card entity.'))
+      ->setLabel(new TranslatableMarkup('Ability'))
+      ->setDescription(new TranslatableMarkup('The ability of the Marvel Card entity.'))
       ->setRevisionable(FALSE)
       ->setDefaultValue('')
       ->setDisplayOptions('view', [
@@ -173,8 +335,8 @@ class MarvelCard extends ContentEntityBase implements MarvelCardInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['flavor'] = BaseFieldDefinition::create('string_long')
-      ->setLabel(t('Flavor'))
-      ->setDescription(t('The flavor text of the Marvel Card entity.'))
+      ->setLabel(new TranslatableMarkup('Flavor'))
+      ->setDescription(new TranslatableMarkup('The flavor text of the Marvel Card entity.'))
       ->setRevisionable(FALSE)
       ->setDefaultValue('')
       ->setDisplayOptions('view', [
@@ -190,8 +352,8 @@ class MarvelCard extends ContentEntityBase implements MarvelCardInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['art'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Art'))
-      ->setDescription(t('The art image of the Marvel Card entity.'))
+      ->setLabel(new TranslatableMarkup('Art'))
+      ->setDescription(new TranslatableMarkup('The art image of the Marvel Card entity.'))
       ->setRevisionable(FALSE)
       ->setSetting('target_type', 'media')
       ->setDisplayOptions('view', [
@@ -207,8 +369,8 @@ class MarvelCard extends ContentEntityBase implements MarvelCardInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['alternate_art'] = BaseFieldDefinition::create('uri')
-      ->setLabel(t('Alternate Art'))
-      ->setDescription(t('The alternate art image URL of the Marvel Card entity.'))
+      ->setLabel(new TranslatableMarkup('Alternate Art'))
+      ->setDescription(new TranslatableMarkup('The alternate art image URL of the Marvel Card entity.'))
       ->setRevisionable(FALSE)
       ->setDefaultValue('')
       ->setDisplayOptions('view', [
@@ -224,8 +386,8 @@ class MarvelCard extends ContentEntityBase implements MarvelCardInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['url'] = BaseFieldDefinition::create('uri')
-      ->setLabel(t('URL'))
-      ->setDescription(t('The URL of the Marvel Card entity.'))
+      ->setLabel(new TranslatableMarkup('URL'))
+      ->setDescription(new TranslatableMarkup('The URL of the Marvel Card entity.'))
       ->setRevisionable(FALSE)
       ->setDefaultValue('')
       ->setDisplayOptions('view', [
@@ -241,17 +403,17 @@ class MarvelCard extends ContentEntityBase implements MarvelCardInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['status'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(t('Publishing status'))
-      ->setDescription(t('A boolean indicating whether the Card is published.'))
+      ->setLabel(new TranslatableMarkup('Publishing status'))
+      ->setDescription(new TranslatableMarkup('A boolean indicating whether the Card is published.'))
       ->setRevisionable(FALSE)
       ->setDefaultValue(TRUE);
 
     $fields['carddefid'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Card ID'))
-      ->setDescription(t('The card ID of the Marvel Card entity.'))
+      ->setLabel(new TranslatableMarkup('Card ID'))
+      ->setDescription(new TranslatableMarkup('The card ID of the Marvel Card entity.'))
       ->setRevisionable(FALSE)
       ->setSettings([
-        'max_length' => 50,
+        'max_length' => 255,
         'text_processing' => 0,
       ])
       ->setDefaultValue('')
@@ -268,8 +430,8 @@ class MarvelCard extends ContentEntityBase implements MarvelCardInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['variants'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Variants'))
-      ->setDescription(t('The variants of the Marvel Card entity.'))
+      ->setLabel(new TranslatableMarkup('Variants'))
+      ->setDescription(new TranslatableMarkup('The variants of the Marvel Card entity.'))
       ->setRevisionable(FALSE)
       ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
       ->setSetting('target_type', 'variant')
@@ -286,11 +448,11 @@ class MarvelCard extends ContentEntityBase implements MarvelCardInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['source'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Source'))
-      ->setDescription(t('The source of the Marvel Card entity.'))
+      ->setLabel(new TranslatableMarkup('Source'))
+      ->setDescription(new TranslatableMarkup('The source of the Marvel Card entity.'))
       ->setRevisionable(FALSE)
       ->setSettings([
-        'max_length' => 50,
+        'max_length' => 255,
         'text_processing' => 0,
       ])
       ->setDefaultValue('')
@@ -307,11 +469,11 @@ class MarvelCard extends ContentEntityBase implements MarvelCardInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['source_slug'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Source Slug'))
-      ->setDescription(t('The source slug of the Marvel Card entity.'))
+      ->setLabel(new TranslatableMarkup('Source Slug'))
+      ->setDescription(new TranslatableMarkup('The source slug of the Marvel Card entity.'))
       ->setRevisionable(FALSE)
       ->setSettings([
-        'max_length' => 50,
+        'max_length' => 255,
         'text_processing' => 0,
       ])
       ->setDefaultValue('')
@@ -319,8 +481,8 @@ class MarvelCard extends ContentEntityBase implements MarvelCardInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['tags'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Tags'))
-      ->setDescription(t('The tags of the Marvel Card entity.'))
+      ->setLabel(new TranslatableMarkup('Tags'))
+      ->setDescription(new TranslatableMarkup('The tags of the Marvel Card entity.'))
       ->setRevisionable(FALSE)
       ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
       ->setSetting('target_type', 'marvel_tag')
@@ -337,11 +499,11 @@ class MarvelCard extends ContentEntityBase implements MarvelCardInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['rarity'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Rarity'))
-      ->setDescription(t('The rarity of the Marvel Card entity.'))
+      ->setLabel(new TranslatableMarkup('Rarity'))
+      ->setDescription(new TranslatableMarkup('The rarity of the Marvel Card entity.'))
       ->setRevisionable(FALSE)
       ->setSettings([
-        'max_length' => 50,
+        'max_length' => 255,
         'text_processing' => 0,
       ])
       ->setDefaultValue('')
@@ -358,11 +520,11 @@ class MarvelCard extends ContentEntityBase implements MarvelCardInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['rarity_slug'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Rarity Slug'))
-      ->setDescription(t('The rarity slug of the Marvel Card entity.'))
+      ->setLabel(new TranslatableMarkup('Rarity Slug'))
+      ->setDescription(new TranslatableMarkup('The rarity slug of the Marvel Card entity.'))
       ->setRevisionable(FALSE)
       ->setSettings([
-        'max_length' => 50,
+        'max_length' => 255,
         'text_processing' => 0,
       ])
       ->setDefaultValue('')
@@ -379,11 +541,11 @@ class MarvelCard extends ContentEntityBase implements MarvelCardInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['difficulty'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Difficulty'))
-      ->setDescription(t('The difficulty of the Marvel Card entity.'))
+      ->setLabel(new TranslatableMarkup('Difficulty'))
+      ->setDescription(new TranslatableMarkup('The difficulty of the Marvel Card entity.'))
       ->setRevisionable(FALSE)
       ->setSettings([
-        'max_length' => 50,
+        'max_length' => 255,
         'text_processing' => 0,
       ])
       ->setDefaultValue('')
@@ -400,16 +562,16 @@ class MarvelCard extends ContentEntityBase implements MarvelCardInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
-      ->setLabel(t('Created'))
-      ->setDescription(t('The time that the entity was created.'));
+      ->setLabel(new TranslatableMarkup('Created'))
+      ->setDescription(new TranslatableMarkup('The time that the entity was created.'));
 
     $fields['changed'] = BaseFieldDefinition::create('changed')
-      ->setLabel(t('Changed'))
-      ->setDescription(t('The time that the entity was last edited.'));
+      ->setLabel(new TranslatableMarkup('Changed'))
+      ->setDescription(new TranslatableMarkup('The time that the entity was last edited.'));
 
     $fields['revision_translation_affected'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(t('Revision translation affected'))
-      ->setDescription(t('Indicates if the last edit of a translation belongs to current revision.'))
+      ->setLabel(new TranslatableMarkup('Revision translation affected'))
+      ->setDescription(new TranslatableMarkup('Indicates if the last edit of a translation belongs to current revision.'))
       ->setReadOnly(TRUE)
       ->setRevisionable(FALSE)
       ->setTranslatable(TRUE);

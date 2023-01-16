@@ -1,0 +1,38 @@
+uuid: b5c4d285-3f43-401e-a6ff-b2171e6604bb
+langcode: es
+status: true
+dependencies:
+  module:
+    - marvel_card
+    - serialization
+    - user
+_core:
+  default_config_hash: yi9sjelGueWa7H-QSJguWDgmXiJdwYBbS-gdqnxYWjA
+id: entity.marvel_card
+plugin_id: 'entity:marvel_card'
+granularity: method
+configuration:
+  GET:
+    supported_formats:
+      - json
+      - xml
+    supported_auth:
+      - cookie
+  POST:
+    supported_formats:
+      - json
+      - xml
+    supported_auth:
+      - cookie
+  DELETE:
+    supported_formats:
+      - json
+      - xml
+    supported_auth:
+      - cookie
+  PATCH:
+    supported_formats:
+      - json
+      - xml
+    supported_auth:
+      - cookie

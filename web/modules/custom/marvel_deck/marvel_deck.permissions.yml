@@ -1,0 +1,11 @@
+administer marvel deck:
+  title: 'Administer marvel deck settings'
+  restrict access: true
+delete marvel deck:
+  title: Delete marvel deck
+create marvel deck:
+  title: Create marvel deck
+view marvel deck:
+  title: View marvel deck
+edit marvel deck:
+  title: Edit marvel deck

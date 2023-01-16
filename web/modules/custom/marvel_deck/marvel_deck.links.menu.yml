@@ -1,0 +1,10 @@
+entity.marvel_deck.settings:
+  title: 'Marvel deck'
+  description: 'Configure a Marvel deck entity type.'
+  route_name:  entity.marvel_deck.settings
+  parent: system.admin_structure
+entity.marvel_deck.collection:
+  title: 'Marvel decks'
+  description: 'List of marvel decks.'
+  route_name: entity.marvel_deck.collection
+  parent: system.admin_content

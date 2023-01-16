@@ -1,0 +1,38 @@
+uuid: ed547ba0-193e-496e-b0d3-120bb1d11ef6
+langcode: es
+status: true
+dependencies:
+  module:
+    - marvel_deck
+    - serialization
+    - user
+_core:
+  default_config_hash: Bn22wASfjM34EEbVQPCeRl96iQmgHe1mjOF46ou_PLA
+id: entity.marvel_deck
+plugin_id: 'entity:marvel_deck'
+granularity: method
+configuration:
+  GET:
+    supported_formats:
+      - json
+      - xml
+    supported_auth:
+      - cookie
+  POST:
+    supported_formats:
+      - json
+      - xml
+    supported_auth:
+      - cookie
+  DELETE:
+    supported_formats:
+      - json
+      - xml
+    supported_auth:
+      - cookie
+  PATCH:
+    supported_formats:
+      - json
+      - xml
+    supported_auth:
+      - cookie

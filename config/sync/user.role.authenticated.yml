@@ -7,7 +7,12 @@ dependencies:
   module:
     - comment
     - contact
+    - field_ui
     - filter
+    - marvel_card
+    - marvel_deck
+    - marvel_tag
+    - media
     - search
     - shortcut
     - system
@@ -22,7 +27,14 @@ permissions:
   - 'access content'
   - 'access shortcuts'
   - 'access site-wide contact form'
+  - 'administer marvel_card display'
+  - 'administer marvel_card fields'
+  - 'administer marvel_deck display'
+  - 'administer marvel_deck fields'
+  - 'administer marvel_tag display'
+  - 'administer marvel_tag fields'
   - 'post comments'
   - 'search content'
   - 'skip comment approval'
   - 'use text format basic_html'
+  - 'view media'
