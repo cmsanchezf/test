@@ -1,0 +1,16 @@
+uuid: 5f4d3a39-e094-4477-b1c5-57139c291cc5
+langcode: es
+status: false
+dependencies:
+  module:
+    - basic_auth
+    - serialization
+id: marvel_cards_all
+plugin_id: marvel_cards_all
+granularity: method
+configuration:
+  GET:
+    supported_formats:
+      - json
+    supported_auth:
+      - basic_auth
