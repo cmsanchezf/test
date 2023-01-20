@@ -1,10 +1,11 @@
 uuid: 5f4d3a39-e094-4477-b1c5-57139c291cc5
 langcode: es
-status: false
+status: true
 dependencies:
   module:
     - basic_auth
     - serialization
+    - snaper_web_services
 id: marvel_cards_all
 plugin_id: marvel_cards_all
 granularity: method

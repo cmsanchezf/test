@@ -1,10 +1,11 @@
 uuid: 5b25482e-c3f9-49a6-9507-b08712063f07
 langcode: es
-status: false
+status: true
 dependencies:
   module:
     - basic_auth
     - serialization
+    - snaper_web_services
 id: variants_all
 plugin_id: variants_all
 granularity: resource
