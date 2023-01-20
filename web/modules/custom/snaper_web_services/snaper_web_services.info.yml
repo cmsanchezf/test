@@ -1,0 +1,5 @@
+name: Snaper Web Services
+type: module
+description: Provides the snaper API
+package: Custom
+core_version_requirement: ^9 || ^10

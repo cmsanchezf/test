@@ -1,6 +1,6 @@
 uuid: ed547ba0-193e-496e-b0d3-120bb1d11ef6
 langcode: es
-status: true
+status: false
 dependencies:
   module:
     - marvel_deck
