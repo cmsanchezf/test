@@ -2,8 +2,6 @@
 
 namespace Drupal\marvel_deck\Controller;
 
-use Drupal\file\Entity\File;
-use Drupal\media\Entity\Media;
 use Drupal\Core\Controller\ControllerBase;
 
 /**
@@ -15,6 +13,7 @@ class DecksController extends ControllerBase {
    * Function to get decks information from endpoint.
    */
   public function add() {
+    $break = FALSE;
     for ($j = 100; $j < 200; $j++) {
       $iterator = 0;
       // code...
@@ -23,11 +22,9 @@ class DecksController extends ControllerBase {
         $tag = (string) $j;
         $url = "https://marvelsnapzone.com/getinfo/?searchdecks=true&tags=[]&cardtags=[]&deckname=&abilities=[]&sources=[]&cards=[" . $tag . "]&collection=[]&onlywithlikes=0&onlywithvideo=0&onlycontentcreators=0&onlynonanonymous=0&sorttype=updated&sortorder=asc&nextpage=" . $loop;
         dump($url);
-        $break = FALSE;
         $response = file_get_contents($url);
         $decks = NULL;
         $marvel_deck = NULL;
-        $media = NULL;
         if (http_response_code() == 200) {
           // Request was successful.
           $decks = json_decode($response, TRUE)['success']['decks'];
@@ -45,10 +42,6 @@ class DecksController extends ControllerBase {
             $current_deck = $this->entityTypeManager()->getStorage('marvel_deck')
               ->loadMultiple($uids);
             if (empty($current_deck)) {
-              $id = $this->currentUser()->id();
-              $storage = $this->entityTypeManager->getStorage('user');
-              /** @var \Drupal\user\Entity\User $user */
-              $user = $storage->load($id);
               /** @var \Drupal\marvel_deck\Entity\MarvelDeck $marvel_deck */
               $marvel_deck = $this->entityTypeManager()->getStorage('marvel_deck')->create([]);
               $marvel_deck->setDid($deck['deck']['info']['did']);
@@ -101,29 +94,6 @@ class DecksController extends ControllerBase {
                   ->loadMultiple($uids);
                 $marvel_deck->setCard(current($current_card));
               }
-
-              // $screenshot_url = $deck['deck']['info']['screenshot'];
-              // $screenshot_data = file_get_contents($screenshot_url);
-              // $file_name = $deck['deck']['info']['uuid'] . '.webp';
-              // $file = File::create([
-              //   'uri' => 'public://img/decks/' . $file_name,
-              // ]);
-              // $file->setFileUri('public://img/decks/' . $file_name);
-              // $file->setFilename($file_name);
-              // $file->setPermanent();
-              // // Save the screenshot data to the file.
-              // file_put_contents($file->getFileUri(), $screenshot_data);
-              // $saved = $file->save();
-              // if ($saved) {
-              //   $media = Media::create([
-              //     'bundle' => 'image',
-              //     'field_media_image' => [
-              //       'target_id' => $file->id(),
-              //     ],
-              //   ]);
-              //   $media->save();
-              // }
-              // $marvel_deck->setScreenshot($media);
               $marvel_deck->save();
               $iterator++;
             }
@@ -133,7 +103,7 @@ class DecksController extends ControllerBase {
           break;
         }
       }
-      dump('Decks added: ' . $iterator . 'for card:' .$tag. ' in a total of:'.$loop.'loops.'); 
+      dump('Decks added: ' . $iterator . 'for card:' . $tag . ' in a total of:' . $loop . 'loops.');
     }
   }
 

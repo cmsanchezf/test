@@ -56,7 +56,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  *   field_ui_base_route = "entity.marvel_card.settings",
  * )
  */
-class MarvelCard extends ContentEntityBase implements MarvelCardInterface{
+class MarvelCard extends ContentEntityBase implements MarvelCardInterface {
 
   /**
    * {@inheritdoc}

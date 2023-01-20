@@ -2,6 +2,7 @@
 
 namespace Drupal\marvel_deck;
 
+use Drupal\user\Entity\User;
 use Drupal\media\MediaInterface;
 use Drupal\marvel_tag\Entity\MarvelTag;
 use Drupal\marvel_card\Entity\MarvelCard;
@@ -32,7 +33,7 @@ interface MarvelDeckInterface extends ContentEntityInterface {
    * @return $this
    *   The called marvel_deck entity.
    */
-  public function setAuthor($user);
+  public function setAuthor(User $user);
 
   /**
    * Set Marvel Deck author's name.
@@ -133,8 +134,6 @@ interface MarvelDeckInterface extends ContentEntityInterface {
    */
   public function setDescription($description);
 
-  // Video.
-
   /**
    * Set Marvel Deck average power.
    *
@@ -156,8 +155,6 @@ interface MarvelDeckInterface extends ContentEntityInterface {
    *   The called marvel_deck entity.
    */
   public function setAvgCost($avg_cost);
-
-  // Chart.
 
   /**
    * Set Marvel Deck code.
@@ -201,6 +198,6 @@ interface MarvelDeckInterface extends ContentEntityInterface {
    * @return $this
    *   The called marvel_deck entity.
    */
-  public function setChart($chart);
+  public function setChart(array $chart);
 
 }
