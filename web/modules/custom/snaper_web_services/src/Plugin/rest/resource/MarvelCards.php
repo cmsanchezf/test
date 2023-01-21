@@ -10,7 +10,6 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\File\FileUrlGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -55,8 +54,7 @@ class MarvelCards extends ResourceBase {
     LoggerInterface $logger,
     private AccountProxyInterface $accountProxy,
     private CacheBackendInterface $cache,
-    private EntityTypeManagerInterface $entityTypeManager,
-    private FileUrlGeneratorInterface $urlGenerator) {
+    private EntityTypeManagerInterface $entityTypeManager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
 
   }
@@ -74,7 +72,6 @@ class MarvelCards extends ResourceBase {
       $container->get('current_user'),
       $container->get('cache.default'),
       $container->get('entity_type.manager'),
-      $container->get('file_url_generator')
     );
   }
 
@@ -111,12 +108,21 @@ class MarvelCards extends ResourceBase {
     }
     /** @var \Drupal\marvel_card\Entity\MarvelCard[] $marvel_cards */
     $marvel_cards = $this->entityTypeManager->getStorage('marvel_card')->loadMultiple();
+
     foreach ($marvel_cards as $marvel_card) {
-      /** @var \Drupal\media\Entity\Media */
-      $media = $marvel_card->get('art')->entity;
-      /** @var \Drupal\file\Entity\File $file */
-      $file = $media->get('field_media_image')->entity;
-      $url = $this->urlGenerator->generateAbsoluteString($file->getFileUri());
+      /** @var \Drupal\Core\Field\EntityReferenceFieldItemList $field_item_list */
+      $field_item_list = $marvel_card->get('tags');
+      $referenced_entities = $field_item_list->referencedEntities();
+      $ids = array_map(function ($item) {
+        return $item->id();
+      }, $referenced_entities);
+      $tag = $this->entityTypeManager->getStorage('marvel_tag')->loadMultiple($ids);
+      $tags = [];
+      // if(!empty($tag)) {
+      //   $tags[] = [
+      //     'tag_id' => $tag[0]->get('tag_id')->value,
+      //   ];
+      // }.
       $result[] = [
         'cid' => (int) $marvel_card->get('cid')->value,
         'name' => $marvel_card->get('name')->value,
@@ -125,12 +131,18 @@ class MarvelCards extends ResourceBase {
         'power' => (int) $marvel_card->get('power')->value,
         'ability' => $marvel_card->get('ability')->value,
         'flavor' => $marvel_card->get('flavor')->value,
-        'art' => $url,
-        'alternate_art' => $marvel_card->get('alternate_art')->value,
-        'url' => $marvel_card->get('url')->value,
+        'art' => "https://snaper.ddev.site/sites/default/files/img/cards/" . str_replace(' ', '%20', $marvel_card->get('name')->value) . ".webp",
+        'alternate_art' => '',
+        'url' => '/card/' . $marvel_card->get('cid')->value,
         'status' => $marvel_card->get('status')->value,
         'carddefid' => $marvel_card->get('carddefid')->value,
-        'variants' => $this->getVariants($marvel_card->get('cid')->value),
+        'variants' => $this->getVariants($marvel_card->get('cid')->value, str_replace(' ', '%20', $marvel_card->get('name')->value)),
+        'source' => $marvel_card->get('source')->value,
+        'source_slug' => $marvel_card->get('source_slug')->value,
+        'tags' => $tags,
+        'rarity' => $marvel_card->get('rarity')->value,
+        'rarity_slug' => $marvel_card->get('rarity_slug')->value,
+        'difficulty' => $marvel_card->get('difficulty')->value,
       ];
     }
     $this->cache->set('marvel_cards_all', $result, time() + 86400, ['marvel_cards_all']);
@@ -143,11 +155,13 @@ class MarvelCards extends ResourceBase {
    *
    * @param string $cid
    *   The cid of the marvel card.
+   * @param string $name
+   *   The cid of the marvel card.
    *
    * @return array
    *   Array with the variants.
    */
-  private function getVariants($cid): array {
+  private function getVariants($cid, $name): array {
     $result = [];
     $query = $this->entityTypeManager->getStorage('variant')->getQuery();
     $query->condition('cid', $cid);
@@ -155,16 +169,11 @@ class MarvelCards extends ResourceBase {
     /** @var \Drupal\variant\Entity\Variant[] $variants */
     $variants = $this->entityTypeManager->getStorage('variant')->loadMultiple($variant_ids);
     foreach ($variants as $variant) {
-       /** @var \Drupal\media\Entity\Media */
-       $media = $variant->get('art')->entity;
-       /** @var \Drupal\file\Entity\File $file */
-       $file = $media->get('field_media_image')->entity;
-       $url = $this->urlGenerator->generateAbsoluteString($file->getFileUri());
       $result[] = [
         'cid' => (int) $cid,
         'vid' => (int) $variant->get('vid')->value,
-        'art' => $url,
-        'art_filename' => $variant->get('art_filename')->value,
+        'art' => "https://snaper.ddev.site/sites/default/files/img/variants/" . $name . "_" . $variant->get('variant_order')->value . "webp",
+        'art_filename' => $name . "_" . $variant->get('variant_order')->value . "webp",
         'rarity' => $variant->get('rarity')->value,
         'rarity_slug' => $variant->get('rarity_slug')->value,
         'variant_order' => $variant->get('variant_order')->value,
