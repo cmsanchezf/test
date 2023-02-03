@@ -89,6 +89,7 @@ class AddCardsController extends ControllerBase {
           $marvel_card->setCost($card['cost']);
           $marvel_card->setPower($card['power']);
           $marvel_card->setAbility($card['ability']);
+          $marvel_card->setFlavor($card['flavor']);
           $marvel_card->setArt($media);
           $marvel_card->setAlternateArt($card['alternate_art']);
           $marvel_card->setUrl($card['url']);
@@ -153,6 +154,7 @@ class AddCardsController extends ControllerBase {
               ->accessCheck()
               ->condition('tag_id', $tag_data['tag_id']);
             $uids = $query->execute();
+            /** @var \Drupal\marvel_tag\Entity\MarvelTag[] $tag_exists */
             $tag_exists = $this->entityTypeManager()->getStorage('marvel_tag')
               ->loadMultiple($uids);
             if (empty($tag_exists)) {
@@ -164,6 +166,8 @@ class AddCardsController extends ControllerBase {
               $tag->save();
               $marvel_card->setTag($tag);
               $iterator3++;
+            }else {
+              $marvel_card->setTag(reset($tag_exists));
             }
           }
           $marvel_card->save();

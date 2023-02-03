@@ -106,6 +106,14 @@ class MarvelCard extends ContentEntityBase implements MarvelCardInterface {
     return $this;
   }
 
+    /**
+   * {@inheritdoc}
+   */
+  public function setFlavor($flavor) {
+    $this->get('flavor')->value = $flavor;
+    return $this;
+  }
+
   /**
    * {@inheritdoc}
    */

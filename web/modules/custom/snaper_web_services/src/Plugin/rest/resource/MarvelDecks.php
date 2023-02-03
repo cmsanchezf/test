@@ -17,14 +17,14 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
  * Resource to retrieve all marvel cards.
  *
  * @RestResource(
- *   id = "marvel_cards_all",
- *   label = @Translation("All Marvel Cards"),
+ *   id = "marvel_decks",
+ *   label = @Translation("All Marvel Decks"),
  *   uri_paths = {
- *     "canonical" = "/api/v1/marvel_cards/all"
+ *     "canonical" = "/api/v1/marvel_decks"
  *   }
  * )
  */
-class MarvelCards extends ResourceBase {
+class MarvelDecks extends ResourceBase {
 
   /**
    * Constructs a new ExampleResource object.
@@ -101,55 +101,98 @@ class MarvelCards extends ResourceBase {
     /** @var array $result */
     $result = [];
     $cache_metadata = new CacheableMetadata();
-    $cache_metadata->setCacheTags(['marvel_cards_all']);
-    if ($cache = $this->cache->get('marvel_cards_all')) {
+    $cache_metadata->setCacheTags(['marvel_decks_all']);
+    if ($cache = $this->cache->get('marvel_decks_all')) {
       $result = $cache->data;
       $cache_metadata->setCacheMaxAge(Cache::PERMANENT);
     }
-    /** @var \Drupal\marvel_card\Entity\MarvelCard[] $marvel_cards */
-    $marvel_cards = $this->entityTypeManager->getStorage('marvel_card')->loadMultiple();
 
-    foreach ($marvel_cards as $marvel_card) {
-      /** @var \Drupal\Core\Field\EntityReferenceFieldItemList $field_item_list */
-      $field_item_list = $marvel_card->get('tags');
-      $referenced_entities = $field_item_list->referencedEntities();
-      $ids = array_map(function ($item) {
-        return $item->id();
-      }, $referenced_entities);
-      /** @var \Drupal\marvel_tag\Entity\MarvelTag[] $tag */
-      $tag = $this->entityTypeManager->getStorage('marvel_tag')->loadMultiple($ids);
-      $tags = [];
-      if (!empty($tag)) {
-        $tags[] = [
-          'tag_id' => reset($tag)->get('tag_id')->value,
-          'tag' => reset($tag)->get('tag')->value,
-          'tag_slug' => reset($tag)->get('tag_slug')->value,
-        ];
-      }
+    $query = $this->entityTypeManager->getStorage('marvel_deck')->getQuery();
+    $query->condition('tags', '13');
+    $marvel_deck_ids = $query->execute();
+    /** @var \Drupal\marvel_deck\Entity\MarvelDeck[] $marvel_decks */
+    $marvel_decks = $this->entityTypeManager->getStorage('marvel_deck')->loadMultiple($marvel_deck_ids);
+    foreach ($marvel_decks as $marvel_deck) {
       $result[] = [
-        'cid' => (int) $marvel_card->get('cid')->value,
-        'name' => $marvel_card->get('name')->value,
-        'type' => $marvel_card->get('type')->value,
-        'cost' => (int) $marvel_card->get('cost')->value,
-        'power' => (int) $marvel_card->get('power')->value,
-        'ability' => $marvel_card->get('ability')->value,
-        'flavor' => $marvel_card->get('flavor')->value,
-        'art' => "https://snaper.ddev.site/sites/default/files/img/cards/" . str_replace(' ', '%20', $marvel_card->get('name')->value) . ".webp",
-        'alternate_art' => '',
-        'url' => '/card/' . $marvel_card->get('cid')->value,
-        'status' => $marvel_card->get('status')->value,
-        'carddefid' => $marvel_card->get('carddefid')->value,
-        'source' => $marvel_card->get('source')->value,
-        'source_slug' => $marvel_card->get('source_slug')->value,
-        'tags' => $tags,
-        'rarity' => $marvel_card->get('rarity')->value,
-        'rarity_slug' => $marvel_card->get('rarity_slug')->value,
-        'difficulty' => $marvel_card->get('difficulty')->value,
+        "deck" => [
+          'info' => [
+            'did' => (int) $marvel_deck->get('did')->value,
+            'user' => 'snapper',
+            'display_name' => 'Snapper',
+            'uid' => '',
+            'name' => $marvel_deck->get('name')->value,
+            'uuid' => '',
+            'url' => '/deck/' . $marvel_deck->get('did')->value,
+            'lastup' => (int) $marvel_deck->get('lastup')->value,
+            'time_ago' => $marvel_deck->get('time_ago')->value,
+            'slug' => $marvel_deck->get('slug')->value,
+            'screenshot' => '',
+            'description' => $marvel_deck->get('description')->value,
+            'video' => '',
+            'avatar' => '',
+            'avg_power' => (int) $marvel_deck->get('avg_power')->value,
+            'avg_cost' => (int) $marvel_deck->get('avg_cost')->value,
+            'chart' => [
+                'cost' => [],
+                'power' => [],
+            ],
+            'code' => $marvel_deck->get('code')->value,
+            // 'current_user_liked' => $marvel_deck->get('current_user_liked')->value,
+            // 'total_likes' => $marvel_deck->get('total_likes')->value,
+            // 'sources' => '',
+            // 'tags' => '',
+            // 'is_premium' => $marvel_deck->get('is_premium')->value,
+            // 'is_creator' => $marvel_deck->get('is_creator')->value,
+          ],
+          'dekclist' => $this->getCards($marvel_deck->get('did')->value),
+        ],
       ];
     }
-    $this->cache->set('marvel_cards_all', $result, Cache::PERMANENT, ['marvel_cards_all']);
+    $this->cache->set('marvel_decks_all', $result, time() + 86400, ['marvel_decks_all']);
     // Create encoder with specified options as new default settings.
     return new ResourceResponse($result);
+  }
+
+  /**
+   *
+   */
+  private function getCards($did) {
+    $result = [];
+    $query = $this->entityTypeManager->getStorage('marvel_deck')->getQuery();
+    $query->condition('did', $did);
+    $marvel_deck_ids = $query->execute();
+    /** @var \Drupal\marvel_deck\Entity\MarvelDeck[] $marvel_decks */
+    $marvel_decks = $this->entityTypeManager->getStorage('marvel_deck')->loadMultiple($marvel_deck_ids);
+
+    $marvel_deck = reset($marvel_decks);
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemList $field_item_list */
+    $field_item_list = $marvel_deck->get('decklist');
+    $referenced_entities = $field_item_list->referencedEntities();
+    dump($referenced_entities);
+    $ids = array_map(function ($item) {
+      return $item->id();
+    }, $referenced_entities);
+    dump($ids);
+    /**  @var \Drupal\marvel_card\Entity\MarvelCard[] $marvel_cards */
+    $marvel_cards = $this->entityTypeManager->getStorage('marvel_card')->loadMultiple($ids);
+    dump($marvel_cards);
+    die;
+    foreach ($marvel_cards as $marvel_card) {
+      $result[] = [
+        'cid' => (int) $marvel_card->get('cid')->value,
+        'cname' => $marvel_card->get('name')->value,
+        'type' => $marvel_card->get('type')->value,
+        'art' => "https://snaper.ddev.site/sites/default/files/img/cards/" . str_replace(' ', '%20', $marvel_card->get('name')->value) . ".webp",
+        'url' => '/card/' . $marvel_card->get('cid')->value,
+        'ability' => $marvel_card->get('ability')->value,
+        'cost' => (int) $marvel_card->get('cost')->value,
+        'power' => (int) $marvel_card->get('power')->value,
+        'carddefid' => $marvel_card->get('carddefid')->value,
+        'uuid' => 0,
+        'source' => $marvel_card->get('source')->value,
+        'source_slug' => $marvel_card->get('source_slug')->value,
+      ];
+    }
   }
 
 }

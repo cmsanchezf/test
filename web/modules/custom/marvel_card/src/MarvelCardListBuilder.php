@@ -31,6 +31,9 @@ class MarvelCardListBuilder extends EntityListBuilder {
    */
   public function buildHeader() {
     $header['id'] = $this->t('ID');
+    $header['cid'] = $this->t('CID');
+    $header['name'] = $this->t('NAME');
+    $header['type'] = $this->t('TYPE');
     return $header + parent::buildHeader();
   }
 
@@ -40,6 +43,9 @@ class MarvelCardListBuilder extends EntityListBuilder {
   public function buildRow(EntityInterface $entity) {
     /** @var \Drupal\marvel_card\MarvelCardInterface $entity */
     $row['id'] = $entity->toLink();
+    $row['cid'] = $entity->get('cid')->value;
+    $row['name'] = $entity->get('name')->value;
+    $row['type'] = $entity->get('type')->value;
     return $row + parent::buildRow($entity);
   }
 

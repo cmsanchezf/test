@@ -17,21 +17,14 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
  * Resource to retrieve all marvel cards.
  *
  * @RestResource(
- *   id = "variants_all",
- *   label = @Translation("All Variants"),
+ *   id = "marvel_card",
+ *   label = @Translation("Marvel Cards by id"),
  *   uri_paths = {
- *     "canonical" = "/api/v1/variant/{cid}"
+ *     "canonical" = "/api/v1/marvel_card/{cid}"
  *   }
  * )
  */
-class Variants extends ResourceBase {
-
-  /**
-   * A current user instance.
-   *
-   * @var \Drupal\Core\Session\AccountProxyInterface
-   */
-  protected $currentUser;
+class MarvelCard extends ResourceBase {
 
   /**
    * Constructs a new ExampleResource object.
@@ -63,6 +56,7 @@ class Variants extends ResourceBase {
     private CacheBackendInterface $cache,
     private EntityTypeManagerInterface $entityTypeManager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
+
   }
 
   /**
@@ -82,56 +76,83 @@ class Variants extends ResourceBase {
   }
 
   /**
+   * Function to set permissions.
+   */
+  public function permissions() {
+    return [];
+  }
+
+  /**
    * Responds to GET requests.
    *
-   * Return variants for a given card.
-   *
    * @param string $cid
+   *   Returns a simple "Hello World" message.
    *
    * @return \Drupal\rest\ResourceResponse
    *   The HTTP response object.
    *
-   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException.
+   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    */
   public function get(string $cid) {
     // Ensure that the user has permission to access this resource.
     if (!$this->accountProxy->hasPermission('access content')) {
       throw new AccessDeniedHttpException();
     }
+
+    /** @var array $result */
     $result = [];
     $cache_metadata = new CacheableMetadata();
-    $cache_metadata->setCacheTags(['variants_' . $cid]);
-    if ($cache = $this->cache->get('variants_' . $cid)) {
+    $cache_metadata->setCacheTags(['card:' . $cid]);
+    if ($cache = $this->cache->get('marvel_card_' . $cid)) {
       $result = $cache->data;
       $cache_metadata->setCacheMaxAge(Cache::PERMANENT);
     }
     $query = $this->entityTypeManager->getStorage('marvel_card')->getQuery();
     $query->condition('cid', $cid);
-    $marvel_card_id = $query->execute();
-    /** @var \Drupal\marvel_card\Entity\MarvelCard[] $marvel_card */
-    $marvel_card = $this->entityTypeManager->getStorage('marvel_card')->loadMultiple($marvel_card_id);
-    $query = $this->entityTypeManager->getStorage('variant')->getQuery();
-    $query->condition('cid', $cid);
-    $variant_ids = $query->execute();
-    /** @var \Drupal\variant\Entity\Variant[] $variants */
-    $variants = $this->entityTypeManager->getStorage('variant')->loadMultiple($variant_ids);
-    $name = str_replace(' ', '%20', reset($marvel_card)->get('name')->value);
-    foreach ($variants as $variant) {
-      $result[] = [
-        'cid' => (int) $cid,
-        'vid' => (int) $variant->get('vid')->value,
-        'art' => "https://snaper.ddev.site/sites/default/files/img/variants/" . $name . "_" . $variant->get('variant_order')->value . ".webp",
-        'art_filename' => $name . "_" . $variant->get('variant_order')->value . ".webp",
-        'rarity' => $variant->get('rarity')->value,
-        'rarity_slug' => $variant->get('rarity_slug')->value,
-        'variant_order' => $variant->get('variant_order')->value,
-        'status' => $variant->get('status')->value,
-        'full_description' => $variant->get('full_description')->value,
+    $marvel_card_ids = $query->execute();
+    /** @var \Drupal\marvel_card\Entity\MarvelCard[] $marvel_cards */
+    $marvel_cards = $this->entityTypeManager->getStorage('marvel_card')->loadMultiple($marvel_card_ids);
+    /** @var \Drupal\marvel_card\Entity\MarvelCard $marvel_card */
+    $marvel_card = reset($marvel_cards);
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemList $field_item_list */
+    $field_item_list = $marvel_card->get('tags');
+    $referenced_entities = $field_item_list->referencedEntities();
+    $ids = array_map(function ($item) {
+      return $item->id();
+    }, $referenced_entities);
+    /** @var \Drupal\marvel_tag\Entity\MarvelTag[] $tag */
+    $tag = $this->entityTypeManager->getStorage('marvel_tag')->loadMultiple($ids);
+    $tags = [];
+    if (!empty($tag)) {
+      $tags[] = [
+        'tag_id' => reset($tag)->get('tag_id')->value,
+        'tag' => reset($tag)->get('tag')->value,
+        'tag_slug' => reset($tag)->get('tag_slug')->value,
       ];
     }
+    $result = [
+      'cid' => (int) $marvel_card->get('cid')->value,
+      'name' => $marvel_card->get('name')->value,
+      'type' => $marvel_card->get('type')->value,
+      'cost' => (int) $marvel_card->get('cost')->value,
+      'power' => (int) $marvel_card->get('power')->value,
+      'ability' => $marvel_card->get('ability')->value,
+      'flavor' => $marvel_card->get('flavor')->value,
+      'art' => "https://snaper.ddev.site/sites/default/files/img/cards/" . str_replace(' ', '%20', $marvel_card->get('name')->value) . ".webp",
+      'alternate_art' => '',
+      'url' => '/card/' . $marvel_card->get('cid')->value,
+      'status' => $marvel_card->get('status')->value,
+      'carddefid' => $marvel_card->get('carddefid')->value,
+      'source' => $marvel_card->get('source')->value,
+      'source_slug' => $marvel_card->get('source_slug')->value,
+      'tags' => $tags,
+      'rarity' => $marvel_card->get('rarity')->value,
+      'rarity_slug' => $marvel_card->get('rarity_slug')->value,
+      'difficulty' => $marvel_card->get('difficulty')->value,
+    ];
 
-    $this->cache->set('variants_' . $cid, $result, Cache::PERMANENT, ['variants_' . $cid]);
-
+    $this->cache->set('marvel_card_' . $cid, $result, Cache::PERMANENT, ['card:' . $cid]);
+    // Create encoder with specified options as new default settings.
     return new ResourceResponse($result);
   }
 

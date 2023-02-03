@@ -14,7 +14,7 @@ class DecksController extends ControllerBase {
    */
   public function add() {
     $break = FALSE;
-    for ($j = 100; $j < 200; $j++) {
+    for ($j = 1; $j < 300; $j++) {
       $iterator = 0;
       // code...
       for ($i = 0; $i <= 200; $i++) {
@@ -103,7 +103,7 @@ class DecksController extends ControllerBase {
           break;
         }
       }
-      dump('Decks added: ' . $iterator . 'for card:' . $tag . ' in a total of:' . $loop . 'loops.');
+      dump('Decks added: ' . $iterator . 'for card:' . $j . ' in a total of:' . $i . 'loops.');
     }
   }
 
