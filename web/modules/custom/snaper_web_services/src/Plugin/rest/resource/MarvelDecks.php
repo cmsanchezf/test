@@ -11,6 +11,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
@@ -54,7 +55,8 @@ class MarvelDecks extends ResourceBase {
     LoggerInterface $logger,
     private AccountProxyInterface $accountProxy,
     private CacheBackendInterface $cache,
-    private EntityTypeManagerInterface $entityTypeManager) {
+    private EntityTypeManagerInterface $entityTypeManager,
+    private Request $request) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
 
   }
@@ -72,6 +74,7 @@ class MarvelDecks extends ResourceBase {
       $container->get('current_user'),
       $container->get('cache.default'),
       $container->get('entity_type.manager'),
+      $container->get('request_stack')->getCurrentRequest(),
     );
   }
 
@@ -85,7 +88,7 @@ class MarvelDecks extends ResourceBase {
   /**
    * Responds to GET requests.
    *
-   * Returns a simple "Hello World" message.
+   * Returns a simple .
    *
    * @return \Drupal\rest\ResourceResponse
    *   The HTTP response object.
@@ -98,6 +101,12 @@ class MarvelDecks extends ResourceBase {
       throw new AccessDeniedHttpException();
     }
 
+    $query = $this->entityTypeManager->getStorage('marvel_deck')->getQuery();
+
+    if ($this->request->query->has('cost')) {
+      $cost = $this->request->query->get('cost');
+      $query->condition('cost', $cost);
+    }
     /** @var array $result */
     $result = [];
     $cache_metadata = new CacheableMetadata();
@@ -107,7 +116,6 @@ class MarvelDecks extends ResourceBase {
       $cache_metadata->setCacheMaxAge(Cache::PERMANENT);
     }
 
-    $query = $this->entityTypeManager->getStorage('marvel_deck')->getQuery();
     $query->condition('tags', '13');
     $marvel_deck_ids = $query->execute();
     /** @var \Drupal\marvel_deck\Entity\MarvelDeck[] $marvel_decks */

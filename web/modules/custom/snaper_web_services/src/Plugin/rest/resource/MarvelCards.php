@@ -8,6 +8,7 @@ use Drupal\rest\ResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -54,7 +55,8 @@ class MarvelCards extends ResourceBase {
     LoggerInterface $logger,
     private AccountProxyInterface $accountProxy,
     private CacheBackendInterface $cache,
-    private EntityTypeManagerInterface $entityTypeManager) {
+    private EntityTypeManagerInterface $entityTypeManager,
+    private Request $request) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
 
   }
@@ -72,6 +74,7 @@ class MarvelCards extends ResourceBase {
       $container->get('current_user'),
       $container->get('cache.default'),
       $container->get('entity_type.manager'),
+      $container->get('request_stack')->getCurrentRequest()
     );
   }
 
@@ -98,18 +101,57 @@ class MarvelCards extends ResourceBase {
       throw new AccessDeniedHttpException();
     }
 
+    $cache_render = [
+      '#cache' => [
+        'contexts' => [
+          'url.query_args'
+        ],
+      ],
+    ];
+
+    $query = $this->entityTypeManager->getStorage('marvel_card')->getQuery();
+
+    if ($this->request->query->has('cost') && $this->request->query->get('cost') != "") {
+    $cost = $this->request->query->get('cost');
+    $condition = $cost <= 5 ? "=" : ">=";
+    $query->condition('cost', $cost, $condition);
+    }
+
+    if ($this->request->query->has('power') && $this->request->query->get('power') != "") {
+      $power = $this->request->query->get('power');
+      $condition = $power <= 5 ? "=" : ">=";
+      $query->condition('power', $power, $condition);
+    }
+
+    if ($this->request->query->has('source_slug') && $this->request->query->get('source_slug') != "" && $this->request->query->get('source_slug') != "all") {
+      $source = $this->request->query->get('source_slug');
+      $query->condition('source_slug', $source);
+    }
+
+    if ($this->request->query->has('tag') && $this->request->query->get('tag') != "" && $this->request->query->get('tag') != "all") {
+      $tag = $this->request->query->get('tag');
+      $query->condition('tag', $tag);
+    }
+
+
+
+    $query->sort('name', 'ASC');
+    $marvel_cards_ids = $query->execute();
+    /** @var \Drupal\marvel_card\Entity\MarvelCard[] $marvel_cards */
+    $marvel_cards = $this->entityTypeManager->getStorage('marvel_card')->loadMultiple($marvel_cards_ids);
     /** @var array $result */
     $result = [];
-    $cache_metadata = new CacheableMetadata();
-    $cache_metadata->setCacheTags(['marvel_cards_all']);
-    if ($cache = $this->cache->get('marvel_cards_all')) {
-      $result = $cache->data;
-      $cache_metadata->setCacheMaxAge(Cache::PERMANENT);
-    }
-    /** @var \Drupal\marvel_card\Entity\MarvelCard[] $marvel_cards */
-    $marvel_cards = $this->entityTypeManager->getStorage('marvel_card')->loadMultiple();
 
+    // $cache_metadata = new CacheableMetadata();
+    // $cache_metadata->setCacheTags(['marvel_cards_all']);
+    // if ($cache = $this->cache->get('marvel_cards_all')) {
+    //   $result = $cache->data;
+    //   $cache_metadata->setCacheMaxAge(Cache::PERMANENT);
+    // }
+
+    $cache_tags = [];
     foreach ($marvel_cards as $marvel_card) {
+      Cache::mergeTags($cache_tags, $marvel_card->getCacheTags());
       /** @var \Drupal\Core\Field\EntityReferenceFieldItemList $field_item_list */
       $field_item_list = $marvel_card->get('tags');
       $referenced_entities = $field_item_list->referencedEntities();
@@ -147,9 +189,16 @@ class MarvelCards extends ResourceBase {
         'difficulty' => $marvel_card->get('difficulty')->value,
       ];
     }
-    $this->cache->set('marvel_cards_all', $result, Cache::PERMANENT, ['marvel_cards_all']);
+
+    $cache_render['#cache']['tags'] = $cache_tags;
+    // $this->cache->set('marvel_cards_all', $result, Cache::PERMANENT, ['marvel_cards_all']);
     // Create encoder with specified options as new default settings.
-    return new ResourceResponse($result);
+    $response = new ResourceResponse($result);
+    $response->setPublic();
+    $response->setMaxAge(900);
+    $response->setSharedMaxAge(300);
+    $response->addCacheableDependency(CacheableMetadata::createFromRenderArray($cache_render));
+    return $response;
   }
 
 }

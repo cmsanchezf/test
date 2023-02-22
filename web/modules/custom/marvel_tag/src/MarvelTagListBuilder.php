@@ -31,6 +31,9 @@ class MarvelTagListBuilder extends EntityListBuilder {
    */
   public function buildHeader() {
     $header['id'] = $this->t('ID');
+    $header['tag_id'] = $this->t('TAG ID');
+    $header['tag'] = $this->t('TAG');
+    $header['tag_slug'] = $this->t('SLUG');
     return $header + parent::buildHeader();
   }
 
@@ -40,6 +43,9 @@ class MarvelTagListBuilder extends EntityListBuilder {
   public function buildRow(EntityInterface $entity) {
     /** @var \Drupal\marvel_tag\MarvelTagInterface $entity */
     $row['id'] = $entity->toLink();
+    $row['tag_id'] = $entity->get('tag_id')->value;
+    $row['tag'] = $entity->get('tag')->value;
+    $row['tag_slug'] = $entity->get('tag_slug')->value;
     return $row + parent::buildRow($entity);
   }
 
