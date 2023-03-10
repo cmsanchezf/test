@@ -19,9 +19,11 @@ class AddCardsController extends ControllerBase {
     // $storage = $this->entityTypeManager()->getStorage('marvel_card');
     // $entities = $storage->loadMultiple();
     // $storage->delete($entities);
-    // $storage = $this->entityTypeManager()->getStorage('marvel_deck');
-    // $entities = $storage->loadMultiple();
-    // $storage->delete($entities);
+    $storage = $this->entityTypeManager()->getStorage('marvel_deck');
+    $query = $storage->getQuery();
+    $entityIds = $query->execute();
+    $entities = $storage->loadMultiple();
+    $storage->delete($entities);
     // $storage = $this->entityTypeManager()->getStorage('variant');
     // $entities = $storage->loadMultiple();
     // $storage->delete($entities);
@@ -34,7 +36,7 @@ class AddCardsController extends ControllerBase {
     // $storage = $this->entityTypeManager()->getStorage('media');
     // $entities = $storage->loadMultiple();
     // $storage->delete($entities);
-    // die;
+    die;
     // // Check if a marvel card with the same cid already exists.
     $url = 'https://marvelsnapzone.com/getinfo/?searchtype=cards&searchcardstype=true';
     $response = file_get_contents($url);
@@ -59,27 +61,27 @@ class AddCardsController extends ControllerBase {
         $current_card = $this->entityTypeManager()->getStorage('marvel_card')
           ->loadMultiple($uids);
         if (empty($current_card)) {
-          $image_url = $card['art'];
-          $image_data = file_get_contents($image_url);
-          $file_name = $card['name'] . '.webp';
-          $file = File::create([
-            'uri' => 'public://img/cards/' . $file_name,
-          ]);
-          $file->setFileUri('public://img/cards/' . $file_name);
-          $file->setFilename($file_name);
-          $file->setPermanent();
-          // Save the image data to the file.
-          file_put_contents($file->getFileUri(), $image_data);
-          $saved = $file->save();
-          if ($saved) {
-            $media = Media::create([
-              'bundle' => 'image',
-              'field_media_image' => [
-                'target_id' => $file->id(),
-              ],
-            ]);
-            $media->save();
-          }
+          // $image_url = $card['art'];
+          // $image_data = file_get_contents($image_url);
+          // $file_name = $card['name'] . '.webp';
+          // $file = File::create([
+          //   'uri' => 'public://img/cards/' . $file_name,
+          // ]);
+          // $file->setFileUri('public://img/cards/' . $file_name);
+          // $file->setFilename($file_name);
+          // $file->setPermanent();
+          // // Save the image data to the file.
+          // file_put_contents($file->getFileUri(), $image_data);
+          // $saved = $file->save();
+          // if ($saved) {
+          //   $media = Media::create([
+          //     'bundle' => 'image',
+          //     'field_media_image' => [
+          //       'target_id' => $file->id(),
+          //     ],
+          //   ]);
+          //   $media->save();
+          // }
 
           /** @var \Drupal\marvel_card\Entity\MarvelCard $marvel_card */
           $marvel_card = $this->entityTypeManager()->getStorage('marvel_card')->create([]);
@@ -90,8 +92,7 @@ class AddCardsController extends ControllerBase {
           $marvel_card->setPower($card['power']);
           $marvel_card->setAbility($card['ability']);
           $marvel_card->setFlavor($card['flavor']);
-          $marvel_card->setArt($media);
-          $marvel_card->setAlternateArt($card['alternate_art']);
+          $marvel_card->setAlternateArt($card['art']);
           $marvel_card->setUrl($card['url']);
           $marvel_card->setStatus($card['status']);
           $marvel_card->setCarddefid($card['carddefid']);
@@ -110,33 +111,33 @@ class AddCardsController extends ControllerBase {
             $current_variant = $this->entityTypeManager()->getStorage('variant')
               ->loadMultiple($uids);
             if (empty($current_variant)) {
-              $image_url = $variant_data['art'];
-              $image_data = file_get_contents($image_url);
-              $file_name = $card['name'] . '_' . $variant_data['variant_order'] . '.webp';
-              $file = File::create([
-                'uri' => 'public://img/variants/' . $file_name,
-              ]);
-              $file->setFileUri('public://img/variants/' . $file_name);
-              $file->setFilename($file_name);
-              $file->setPermanent();
-              // Save the image data to the file.
-              file_put_contents($file->getFileUri(), $image_data);
-              $saved = $file->save();
-              if ($saved) {
-                $media = Media::create([
-                  'bundle' => 'image',
-                  'field_media_image' => [
-                    'target_id' => $file->id(),
-                  ],
-                ]);
-                $media->save();
-              }
+              // $image_url = $variant_data['art'];
+              // $image_data = file_get_contents($image_url);
+              // $file_name = $card['name'] . '_' . $variant_data['variant_order'] . '.webp';
+              // $file = File::create([
+              //   'uri' => 'public://img/variants/' . $file_name,
+              // ]);
+              // $file->setFileUri('public://img/variants/' . $file_name);
+              // $file->setFilename($file_name);
+              // $file->setPermanent();
+              // // Save the image data to the file.
+              // file_put_contents($file->getFileUri(), $image_data);
+              // $saved = $file->save();
+              // if ($saved) {
+              //   $media = Media::create([
+              //     'bundle' => 'image',
+              //     'field_media_image' => [
+              //       'target_id' => $file->id(),
+              //     ],
+              //   ]);
+              //   $media->save();
+              // }
+              
               /** @var \Drupal\variant\Entity\Variant $variant */
               $variant = $this->entityTypeManager()->getStorage('variant')->create([]);
               $variant->setCid($variant_data['cid']);
               $variant->setVid($variant_data['vid']);
-              $variant->setArt($media);
-              $variant->setFileName($variant_data['art_filename']);
+              $variant->setFileName($variant_data['art']);
               $variant->setRarity($variant_data['rarity']);
               $variant->setRaritySlug($variant_data['rarity_slug']);
               $variant->setVariantOrder($variant_data['variant_order']);

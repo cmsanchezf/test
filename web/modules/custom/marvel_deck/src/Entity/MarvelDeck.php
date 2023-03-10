@@ -276,20 +276,11 @@ class MarvelDeck extends ContentEntityBase implements MarvelDeckInterface {
       ->setLabel(new TranslatableMarkup('Last Updated'))
       ->setReadOnly(TRUE);
 
-    $fields['slug'] = BaseFieldDefinition::create('string')
-      ->setLabel(new TranslatableMarkup('Deck Slug'))
-      ->setSetting('is_ascii', TRUE)
-      ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
-        'weight' => 0,
-      ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayOptions('view', [
-        'label' => 'above',
-        'type' => 'string',
-        'weight' => 0,
-      ])
-      ->setDisplayConfigurable('view', TRUE);
+    $fields['slug'] = BaseFieldDefinition::create('integer')
+      ->setLabel(new TranslatableMarkup('Games'))
+      ->setSetting('min', 0)
+      ->setSetting('max', 2000000000000000)
+      ->setReadOnly(TRUE);
 
     $fields['time_ago'] = BaseFieldDefinition::create('string')
       ->setLabel(new TranslatableMarkup('Time Since Last Update'))

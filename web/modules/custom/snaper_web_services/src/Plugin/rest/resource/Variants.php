@@ -93,7 +93,7 @@ class Variants extends ResourceBase {
    *
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException.
    */
-  public function get(string $cid) {
+  public function get(string $cid = "0") {
     // Ensure that the user has permission to access this resource.
     if (!$this->accountProxy->hasPermission('access content')) {
       throw new AccessDeniedHttpException();
@@ -106,28 +106,32 @@ class Variants extends ResourceBase {
       $cache_metadata->setCacheMaxAge(Cache::PERMANENT);
     }
     $query = $this->entityTypeManager->getStorage('marvel_card')->getQuery();
-    $query->condition('cid', $cid);
-    $marvel_card_id = $query->execute();
-    /** @var \Drupal\marvel_card\Entity\MarvelCard[] $marvel_card */
-    $marvel_card = $this->entityTypeManager->getStorage('marvel_card')->loadMultiple($marvel_card_id);
-    $query = $this->entityTypeManager->getStorage('variant')->getQuery();
-    $query->condition('cid', $cid);
-    $variant_ids = $query->execute();
-    /** @var \Drupal\variant\Entity\Variant[] $variants */
-    $variants = $this->entityTypeManager->getStorage('variant')->loadMultiple($variant_ids);
-    $name = str_replace(' ', '%20', reset($marvel_card)->get('name')->value);
-    foreach ($variants as $variant) {
-      $result[] = [
-        'cid' => (int) $cid,
-        'vid' => (int) $variant->get('vid')->value,
-        'art' => "https://snaper.ddev.site/sites/default/files/img/variants/" . $name . "_" . $variant->get('variant_order')->value . ".webp",
-        'art_filename' => $name . "_" . $variant->get('variant_order')->value . ".webp",
-        'rarity' => $variant->get('rarity')->value,
-        'rarity_slug' => $variant->get('rarity_slug')->value,
-        'variant_order' => $variant->get('variant_order')->value,
-        'status' => $variant->get('status')->value,
-        'full_description' => $variant->get('full_description')->value,
-      ];
+    if ($cid != "0") {
+      $query->condition('cid', $cid);
+    }
+    $marvel_cards_id = $query->execute();
+    /** @var \Drupal\marvel_card\Entity\MarvelCard[] $marvel_cards */
+    $marvel_cards = $this->entityTypeManager->getStorage('marvel_card')->loadMultiple($marvel_cards_id);
+    foreach ($marvel_cards as $marvel_card) {
+      $current_id = $marvel_card->get('cid')->value;
+      $query = $this->entityTypeManager->getStorage('variant')->getQuery();
+      $query->condition('cid', $current_id);
+      $variant_ids = $query->execute();
+      /** @var \Drupal\variant\Entity\Variant[] $variants */
+      $variants = $this->entityTypeManager->getStorage('variant')->loadMultiple($variant_ids);
+      foreach ($variants as $variant) {
+        $result[]= [
+          'cid' => (int) $current_id,
+          'vid' => (int) $variant->get('vid')->value,
+          'art' =>  $variant->get('art_filename')->value,
+          'art_filename' => '',
+          'rarity' => $variant->get('rarity')->value ?: '',
+          'rarity_slug' => $variant->get('rarity_slug')->value ?: '',
+          'variant_order' => $variant->get('variant_order')->value ?: '',
+          'status' => $variant->get('status')->value,
+          'full_description' => $variant->get('full_description')->value ?: '',
+        ];
+      }
     }
 
     $this->cache->set('variants_' . $cid, $result, Cache::PERMANENT, ['variants_' . $cid]);

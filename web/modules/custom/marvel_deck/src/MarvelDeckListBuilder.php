@@ -22,7 +22,21 @@ class MarvelDeckListBuilder extends EntityListBuilder {
       ->count()
       ->execute();
 
-    $build['summary']['#markup'] = $this->t('Total marvel decks: @total', ['@total' => $total]);
+      $build['summary']['#markup'] = $this->t('Total marvel decks: @total', ['@total' => $total]);
+
+      $build['#header'] = [
+        'data' => $this->buildHeader(),
+        'class' => ['table-header'],
+      ];
+
+      $build['#tabledrag'] = [
+        [
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => 'marvel-deck-order-weight',
+        ],
+      ];
+      
     return $build;
   }
 
@@ -31,6 +45,14 @@ class MarvelDeckListBuilder extends EntityListBuilder {
    */
   public function buildHeader() {
     $header['id'] = $this->t('ID');
+    $header['did'] = $this->t('Deck ID');
+    $header['slug'] = [
+      'data' => $this->t('Games'),
+      'field' => 'slug',
+      'specifier' => 'slug',
+      'sort' => true,
+    ];
+    $header['name'] = $this->t('Name');
     return $header + parent::buildHeader();
   }
 
@@ -40,7 +62,21 @@ class MarvelDeckListBuilder extends EntityListBuilder {
   public function buildRow(EntityInterface $entity) {
     /** @var \Drupal\marvel_deck\MarvelDeckInterface $entity */
     $row['id'] = $entity->toLink();
+    $row['did'] = $entity->get('did')->value;
+    $row['slug'] = $entity->get('slug')->value;
+    $row['name'] = $entity->get('name')->value;
     return $row + parent::buildRow($entity);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSortFields() {
+    $fields = [
+      'slug' => $this->t('Games'),
+    ]; 
+
+    return $fields;
   }
 
 }

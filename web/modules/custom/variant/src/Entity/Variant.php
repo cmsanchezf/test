@@ -178,26 +178,22 @@ class Variant extends ContentEntityBase implements VariantInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['art_filename'] = BaseFieldDefinition::create('string')
-      ->setLabel(new TranslatableMarkup('Art Filename'))
-      ->setDescription(new TranslatableMarkup('The art filename of the Variant entity.'))
-      ->setRevisionable(TRUE)
-      ->setSettings([
-        'max_length' => 50,
-        'text_processing' => 0,
-      ])
-      ->setDefaultValue('')
-      ->setDisplayOptions('view', [
-        'label' => 'hidden',
-        'type' => 'string',
-        'weight' => 2,
-      ])
-      ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
-        'weight' => 2,
-      ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayConfigurable('view', TRUE);
+    $fields['art_filename'] = BaseFieldDefinition::create('string_long')
+    ->setLabel(new TranslatableMarkup('Art Filename'))
+    ->setDescription(new TranslatableMarkup('The flavor text of the Marvel Card entity.'))
+    ->setRevisionable(FALSE)
+    ->setDefaultValue('')
+    ->setDisplayOptions('view', [
+      'label' => 'hidden',
+      'type' => 'string_long',
+      'weight' => 1,
+    ])
+    ->setDisplayOptions('form', [
+      'type' => 'string_textarea',
+      'weight' => 0,
+    ])
+    ->setDisplayConfigurable('form', TRUE)
+    ->setDisplayConfigurable('view', TRUE);
 
     $fields['rarity'] = BaseFieldDefinition::create('string')
       ->setLabel(new TranslatableMarkup('Rarity'))

@@ -93,7 +93,7 @@ interface MarvelDeckInterface extends ContentEntityInterface {
   /**
    * Set Marvel Deck slug.
    *
-   * @param string $slug
+   * @param int $slug
    *   The new slug.
    *
    * @return $this

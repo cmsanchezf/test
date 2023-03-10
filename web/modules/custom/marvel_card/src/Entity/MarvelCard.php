@@ -226,6 +226,10 @@ class MarvelCard extends ContentEntityBase implements MarvelCardInterface {
     return $this;
   }
 
+  public function getCost() {
+    return $this->get('cost')->value;
+  }
+
   /**
    * {@inheritdoc}
    */
@@ -376,22 +380,22 @@ class MarvelCard extends ContentEntityBase implements MarvelCardInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['alternate_art'] = BaseFieldDefinition::create('uri')
-      ->setLabel(new TranslatableMarkup('Alternate Art'))
-      ->setDescription(new TranslatableMarkup('The alternate art image URL of the Marvel Card entity.'))
-      ->setRevisionable(FALSE)
-      ->setDefaultValue('')
-      ->setDisplayOptions('view', [
-        'label' => 'hidden',
-        'type' => 'image',
-        'weight' => 3,
-      ])
-      ->setDisplayOptions('form', [
-        'type' => 'image_image',
-        'weight' => 3,
-      ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayConfigurable('view', TRUE);
+    $fields['alternate_art'] = BaseFieldDefinition::create('string_long')
+    ->setLabel(new TranslatableMarkup('Alternate Art'))
+    ->setDescription(new TranslatableMarkup('The flavor text of the Marvel Card entity.'))
+    ->setRevisionable(FALSE)
+    ->setDefaultValue('')
+    ->setDisplayOptions('view', [
+      'label' => 'hidden',
+      'type' => 'string_long',
+      'weight' => 1,
+    ])
+    ->setDisplayOptions('form', [
+      'type' => 'string_textarea',
+      'weight' => 0,
+    ])
+    ->setDisplayConfigurable('form', TRUE)
+    ->setDisplayConfigurable('view', TRUE);
 
     $fields['url'] = BaseFieldDefinition::create('uri')
       ->setLabel(new TranslatableMarkup('URL'))

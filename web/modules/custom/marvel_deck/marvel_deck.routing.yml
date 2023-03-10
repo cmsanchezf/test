@@ -9,7 +9,7 @@ entity.marvel_deck.settings:
 marvel_deck.add_decks:
   path: '/add-decks'
   defaults:
-    _controller: '\Drupal\marvel_deck\Controller\DecksController::add'
-    _title: 'Race video'
+    _controller: '\Drupal\marvel_deck\Controller\DecksController::getTopDecksPro'
+    _title: 'Add decks'
   requirements:
     _permission: 'access content'

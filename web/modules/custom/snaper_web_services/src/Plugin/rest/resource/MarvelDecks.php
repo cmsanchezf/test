@@ -103,10 +103,6 @@ class MarvelDecks extends ResourceBase {
 
     $query = $this->entityTypeManager->getStorage('marvel_deck')->getQuery();
 
-    if ($this->request->query->has('cost')) {
-      $cost = $this->request->query->get('cost');
-      $query->condition('cost', $cost);
-    }
     /** @var array $result */
     $result = [];
     $cache_metadata = new CacheableMetadata();
@@ -115,8 +111,8 @@ class MarvelDecks extends ResourceBase {
       $result = $cache->data;
       $cache_metadata->setCacheMaxAge(Cache::PERMANENT);
     }
+    $query->sort('slug', 'DESC');
 
-    $query->condition('tags', '13');
     $marvel_deck_ids = $query->execute();
     /** @var \Drupal\marvel_deck\Entity\MarvelDeck[] $marvel_decks */
     $marvel_decks = $this->entityTypeManager->getStorage('marvel_deck')->loadMultiple($marvel_deck_ids);
@@ -131,28 +127,24 @@ class MarvelDecks extends ResourceBase {
             'name' => $marvel_deck->get('name')->value,
             'uuid' => '',
             'url' => '/deck/' . $marvel_deck->get('did')->value,
-            'lastup' => (int) $marvel_deck->get('lastup')->value,
-            'time_ago' => $marvel_deck->get('time_ago')->value,
-            'slug' => $marvel_deck->get('slug')->value,
+            'lastup' => (int) $marvel_deck->get('lastup')->value ?: 0,
+            'time_ago' => $marvel_deck->get('time_ago')->value ?: '',
+            'slug' => (int) $marvel_deck->get('slug')->value ?: 0,
             'screenshot' => '',
-            'description' => $marvel_deck->get('description')->value,
+            'description' => $marvel_deck->get('description')->value ?: '',
             'video' => '',
             'avatar' => '',
             'avg_power' => (int) $marvel_deck->get('avg_power')->value,
             'avg_cost' => (int) $marvel_deck->get('avg_cost')->value,
-            'chart' => [
-                'cost' => [],
-                'power' => [],
-            ],
-            'code' => $marvel_deck->get('code')->value,
-            // 'current_user_liked' => $marvel_deck->get('current_user_liked')->value,
-            // 'total_likes' => $marvel_deck->get('total_likes')->value,
-            // 'sources' => '',
-            // 'tags' => '',
-            // 'is_premium' => $marvel_deck->get('is_premium')->value,
-            // 'is_creator' => $marvel_deck->get('is_creator')->value,
+            'code' => $marvel_deck->get('code')->value ?: '',
+            'current_user_liked' => 0,
+            'total_likes' => 0,
+            'is_premium' => true,
+            'is_creator' => false,
           ],
-          'dekclist' => $this->getCards($marvel_deck->get('did')->value),
+          'decklist' => [
+            'cards' => $this->getCards($marvel_deck->get('did')->value),
+          ]
         ],
       ];
     }
@@ -175,32 +167,29 @@ class MarvelDecks extends ResourceBase {
     $marvel_deck = reset($marvel_decks);
     /** @var \Drupal\Core\Field\EntityReferenceFieldItemList $field_item_list */
     $field_item_list = $marvel_deck->get('decklist');
-    $referenced_entities = $field_item_list->referencedEntities();
-    dump($referenced_entities);
-    $ids = array_map(function ($item) {
-      return $item->id();
-    }, $referenced_entities);
-    dump($ids);
+    $ids = [];
+    foreach ($field_item_list as $id) {
+      $ids[] = $id->target_id;
+    }
     /**  @var \Drupal\marvel_card\Entity\MarvelCard[] $marvel_cards */
     $marvel_cards = $this->entityTypeManager->getStorage('marvel_card')->loadMultiple($ids);
-    dump($marvel_cards);
-    die;
     foreach ($marvel_cards as $marvel_card) {
       $result[] = [
         'cid' => (int) $marvel_card->get('cid')->value,
         'cname' => $marvel_card->get('name')->value,
         'type' => $marvel_card->get('type')->value,
-        'art' => "https://snaper.ddev.site/sites/default/files/img/cards/" . str_replace(' ', '%20', $marvel_card->get('name')->value) . ".webp",
+        'art' => $marvel_card->get('alternate_art')->value,
         'url' => '/card/' . $marvel_card->get('cid')->value,
-        'ability' => $marvel_card->get('ability')->value,
+        'ability' => $marvel_card->get('ability')->value ?: '',
         'cost' => (int) $marvel_card->get('cost')->value,
         'power' => (int) $marvel_card->get('power')->value,
         'carddefid' => $marvel_card->get('carddefid')->value,
-        'uuid' => 0,
+        'uuid' => '',
         'source' => $marvel_card->get('source')->value,
         'source_slug' => $marvel_card->get('source_slug')->value,
       ];
     }
+    return $result;
   }
 
 }
